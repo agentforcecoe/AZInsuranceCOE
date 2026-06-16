@@ -1433,5 +1433,24 @@ function toggleFaq(el) {
 // Init calculator
 calcPremium();
 </script>
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00DHn000008KeZx',
+				'Az_Insurance',
+				'https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326',
+				{
+					scrt2URL: 'https://ap1781425693806.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 </body>
 </html>

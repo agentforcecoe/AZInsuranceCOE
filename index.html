@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ Insurance – Protection for Every Stage of Life</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-dark: #1B5E20;
+    --green-mid: #2E7D32;
+    --green-main: #388E3C;
+    --green-soft: #4CAF50;
+    --green-pale: #E8F5E9;
+    --green-accent: #00C853;
+    --text-dark: #1A1A2E;
+    --text-mid: #4A4A6A;
+    --text-light: #8A8AAA;
+    --white: #FFFFFF;
+    --bg-light: #F7F9F7;
+    --border: #D8E8D8;
+    --shadow: 0 2px 20px rgba(27,94,32,0.08);
+    --shadow-hover: 0 8px 32px rgba(27,94,32,0.14);
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text-dark); background: var(--white); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; height: 72px; gap: 2rem; }
+  .nav-logo img { height: 44px; }
+  .nav-links { display: flex; gap: 0.25rem; margin-left: 2rem; flex: 1; }
+  .nav-link { padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 500; color: var(--text-mid); border-radius: 8px; transition: all 0.2s; cursor: pointer; }
+  .nav-link:hover, .nav-link.active { background: var(--green-pale); color: var(--green-dark); }
+  .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+  .btn-ghost { padding: 0.5rem 1.25rem; border: 1.5px solid var(--green-main); color: var(--green-main); background: transparent; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-ghost:hover { background: var(--green-pale); }
+  .btn-primary { padding: 0.5rem 1.25rem; background: var(--green-main); color: white; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-primary:hover { background: var(--green-dark); }
+
+  /* PAGES */
+  .page { display: none; padding-top: 72px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #0D3B14 0%, #1B5E20 40%, #2E7D32 100%); color: white; padding: 6rem 2rem 5rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -40%; right: -10%; width: 70%; height: 180%; background: radial-gradient(ellipse, rgba(0,200,83,0.12) 0%, transparent 70%); }
+  .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.15; margin-bottom: 1.25rem; }
+  .hero h1 span { color: #69F0AE; }
+  .hero p { font-size: 1.1rem; opacity: 0.85; line-height: 1.7; margin-bottom: 2rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-hero { padding: 0.875rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-hero-white { background: white; color: var(--green-dark); border: none; }
+  .btn-hero-white:hover { background: #E8F5E9; transform: translateY(-1px); }
+  .btn-hero-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+  .btn-hero-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+  .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .hero-stat { text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius); }
+  .hero-stat-num { font-size: 2rem; font-weight: 700; color: #69F0AE; }
+  .hero-stat-label { font-size: 0.8rem; opacity: 0.75; margin-top: 0.25rem; }
+  .hero-visual { display: flex; flex-direction: column; gap: 1rem; }
+  .hero-card { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: var(--radius); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(8px); }
+  .hero-card-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(105,240,174,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+  .hero-card-text h4 { font-size: 0.95rem; font-weight: 600; }
+  .hero-card-text p { font-size: 0.8rem; opacity: 0.7; margin-top: 0.2rem; }
+
+  /* TRUST BAR */
+  .trust-bar { background: var(--green-pale); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; }
+  .trust-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; align-items: center; }
+  .trust-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--green-dark); }
+  .trust-icon { font-size: 1.1rem; }
+
+  /* SECTION STRUCTURE */
+  .section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green-main); margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; }
+  .section-subtitle { font-size: 1rem; color: var(--text-mid); line-height: 1.7; max-width: 600px; }
+  .section-header { margin-bottom: 3rem; }
+  .section-header.center { text-align: center; }
+  .section-header.center .section-subtitle { margin: 0 auto; }
+
+  /* PRODUCT CARDS */
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .product-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden; }
+  .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--green-main); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .product-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-4px); border-color: var(--green-soft); }
+  .product-card.featured { border-color: var(--green-main); }
+  .product-badge { position: absolute; top: 1rem; right: 1rem; background: var(--green-pale); color: var(--green-dark); font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 50px; }
+  .product-icon { width: 52px; height: 52px; border-radius: 12px; background: var(--green-pale); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
+  .product-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+  .product-card p { font-size: 0.875rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 1.5rem; }
+  .product-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .product-tag { font-size: 0.72rem; font-weight: 600; background: var(--bg-light); color: var(--text-mid); padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid var(--border); }
+  .product-link { display: flex; align-items: center; gap: 0.5rem; color: var(--green-main); font-size: 0.875rem; font-weight: 600; transition: gap 0.2s; }
+  .product-link:hover { gap: 0.75rem; }
+
+  /* PRODUCT DETAIL PAGE */
+  .product-hero { background: linear-gradient(135deg, #0D3B14, #2E7D32); color: white; padding: 4rem 2rem; }
+  .product-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; opacity: 0.7; margin-bottom: 1.5rem; cursor: pointer; }
+  .breadcrumb span:hover { opacity: 1; }
+  .product-hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .product-hero .subtitle { font-size: 1.1rem; opacity: 0.85; }
+  .product-detail-content { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; }
+  .detail-section { margin-bottom: 2.5rem; }
+  .detail-section h2 { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--green-pale); }
+  .detail-section p { font-size: 0.95rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 0.75rem; }
+  .benefit-list { list-style: none; }
+  .benefit-list li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; font-size: 0.9rem; color: var(--text-mid); border-bottom: 1px solid var(--bg-light); }
+  .benefit-list li:last-child { border-bottom: none; }
+  .benefit-check { color: var(--green-main); font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .detail-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .detail-table th { background: var(--green-pale); color: var(--green-dark); padding: 0.75rem 1rem; text-align: left; font-weight: 600; }
+  .detail-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--bg-light); color: var(--text-mid); }
+  .detail-table tr:last-child td { border-bottom: none; }
+  .sidebar-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); }
+  .sidebar-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; }
+  .sidebar-highlight { background: var(--green-pale); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .sidebar-highlight .label { font-size: 0.75rem; font-weight: 600; color: var(--green-main); text-transform: uppercase; letter-spacing: 0.05em; }
+  .sidebar-highlight .value { font-size: 1.3rem; font-weight: 700; color: var(--green-dark); margin-top: 0.25rem; }
+  .btn-full { width: 100%; padding: 0.875rem; background: var(--green-main); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 0.75rem; transition: background 0.2s; }
+  .btn-full:hover { background: var(--green-dark); }
+  .btn-full-ghost { width: 100%; padding: 0.875rem; background: transparent; color: var(--green-main); border: 1.5px solid var(--green-main); border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-full-ghost:hover { background: var(--green-pale); }
+
+  /* WHY AZ */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+  .why-card { padding: 2rem; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); text-align: center; transition: box-shadow 0.3s; }
+  .why-card:hover { box-shadow: var(--shadow-hover); }
+  .why-icon { width: 60px; height: 60px; background: var(--green-pale); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 1.25rem; }
+  .why-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+  .why-card p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .testimonial-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; }
+  .testimonial-stars { color: #FFC107; font-size: 1rem; margin-bottom: 1rem; }
+  .testimonial-text { font-size: 0.9rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: white; flex-shrink: 0; }
+  .author-info h4 { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); }
+  .author-info p { font-size: 0.775rem; color: var(--text-light); }
+
+  /* CLAIMS */
+  .claims-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; position: relative; }
+  .step-card { padding: 1.75rem; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); text-align: center; }
+  .step-num { width: 44px; height: 44px; background: var(--green-main); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 1rem; }
+  .step-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+  .step-card p { font-size: 0.825rem; color: var(--text-mid); line-height: 1.6; }
+
+  /* CALCULATOR */
+  .calc-wrapper { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow); max-width: 720px; margin: 0 auto; }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group label { font-size: 0.825rem; font-weight: 600; color: var(--text-mid); }
+  .form-control { padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; color: var(--text-dark); background: var(--bg-light); outline: none; transition: border-color 0.2s; width: 100%; }
+  .form-control:focus { border-color: var(--green-main); background: white; }
+  select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23388E3C' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
+  .calc-result { background: var(--green-pale); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+  .calc-result .result-label { font-size: 0.8rem; font-weight: 600; color: var(--green-main); text-transform: uppercase; letter-spacing: 0.05em; }
+  .calc-result .result-value { font-size: 2.2rem; font-weight: 700; color: var(--green-dark); margin: 0.25rem 0; }
+  .calc-result .result-note { font-size: 0.78rem; color: var(--text-light); }
+
+  /* CONTACT / FORMS */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start; }
+  .contact-info h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 1rem; }
+  .contact-info p { color: var(--text-mid); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem; }
+  .contact-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+  .contact-item-icon { width: 44px; height: 44px; background: var(--green-pale); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .contact-item h4 { font-size: 0.875rem; font-weight: 700; color: var(--text-dark); }
+  .contact-item p { font-size: 0.825rem; color: var(--text-mid); margin-top: 0.2rem; line-height: 1.5; }
+  .form-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow); }
+  .form-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .form-group-full { margin-bottom: 1.25rem; }
+  textarea.form-control { min-height: 100px; resize: vertical; }
+  .success-msg { display: none; background: var(--green-pale); color: var(--green-dark); padding: 1rem 1.25rem; border-radius: 10px; font-size: 0.9rem; font-weight: 600; margin-top: 1rem; }
+
+  /* ABOUT PAGE */
+  .about-hero { background: linear-gradient(135deg, #0D3B14, #2E7D32); color: white; padding: 5rem 2rem; text-align: center; }
+  .about-hero h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 1rem; }
+  .about-hero p { font-size: 1.15rem; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+  .about-content { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+  .about-content p { font-size: 1rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 1.5rem; }
+  .leadership-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+  .leader-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; text-align: center; }
+  .leader-avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: white; margin: 0 auto 1rem; }
+  .leader-card h3 { font-size: 1rem; font-weight: 700; }
+  .leader-card .title { font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem; }
+  .offices-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+  .office-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; }
+  .office-flag { font-size: 2rem; margin-bottom: 1rem; }
+  .office-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.75rem; }
+  .office-card p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; }
+
+  /* FAQ */
+  .faq-list { max-width: 780px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q { padding: 1.25rem 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 0.95rem; font-weight: 600; color: var(--text-dark); }
+  .faq-q:hover { color: var(--green-main); }
+  .faq-toggle { font-size: 1.2rem; color: var(--green-main); transition: transform 0.2s; flex-shrink: 0; }
+  .faq-a { padding-bottom: 1.25rem; font-size: 0.9rem; color: var(--text-mid); line-height: 1.7; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+  /* FOOTER */
+  .footer { background: #0D3B14; color: rgba(255,255,255,0.85); padding: 4rem 2rem 2rem; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand img { height: 40px; filter: brightness(0) invert(1); margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.85rem; opacity: 0.7; line-height: 1.7; max-width: 260px; }
+  .footer-col h4 { font-size: 0.825rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #69F0AE; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.6rem; }
+  .footer-col ul li a { font-size: 0.85rem; opacity: 0.75; transition: opacity 0.2s; cursor: pointer; }
+  .footer-col ul li a:hover { opacity: 1; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
+  .footer-bottom p { font-size: 0.8rem; opacity: 0.5; }
+  .footer-bottom-links { display: flex; gap: 1.5rem; }
+  .footer-bottom-links a { font-size: 0.8rem; opacity: 0.5; cursor: pointer; }
+  .footer-bottom-links a:hover { opacity: 0.8; }
+  .reg-badges { display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .reg-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; opacity: 0.8; }
+
+  /* AZ GREEN CTA */
+  .cta-band { background: linear-gradient(135deg, #1B5E20, #388E3C); color: white; padding: 4rem 2rem; text-align: center; }
+  .cta-band h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .cta-band p { font-size: 1rem; opacity: 0.85; margin-bottom: 2rem; }
+  .cta-band-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  /* MISC */
+  .bg-light { background: var(--bg-light); }
+  .tag-pill { display: inline-block; background: var(--green-pale); color: var(--green-dark); font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.75rem; border-radius: 50px; margin-bottom: 0.75rem; }
+  .divider { height: 1px; background: var(--border); margin: 0; }
+  .hidden { display: none; }
+  
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .calc-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .product-detail-content { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">
+      <svg width="160" height="44" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+        <!-- AZ leaf/wave icon -->
+        <g>
+          <!-- Outer leaf - light green -->
+          <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#4CAF50"/>
+          <!-- Inner leaf - dark green -->
+          <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#1B5E20"/>
+          <!-- Inner negative space -->
+          <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="white"/>
+        </g>
+        <!-- AZ text -->
+        <text x="44" y="30" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="800" fill="#1B5E20">AZ</text>
+        <text x="72" y="30" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="400" fill="#2E7D32"> Insurance</text>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <span class="nav-link" onclick="showPage('products')">Products</span>
+      <span class="nav-link" onclick="showPage('claims')">Claims</span>
+      <span class="nav-link" onclick="showPage('about')">About Us</span>
+      <span class="nav-link" onclick="showPage('faq')">FAQ</span>
+      <span class="nav-link" onclick="showPage('contact')">Contact</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="showPage('contact')">Log In</button>
+      <button class="btn-primary" onclick="showQuote()">Get a Quote</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HOME PAGE ===================== -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag">🛡️ Trusted in Singapore & Philippines</div>
+        <h1>Protection You Can<br><span>Count On,</span><br>For Life.</h1>
+        <p>AZ Insurance offers comprehensive life, health, and general insurance solutions crafted for families and businesses across Singapore and the Philippines.</p>
+        <div class="hero-btns">
+          <button class="btn-hero btn-hero-white" onclick="showPage('products')">Explore Products</button>
+          <button class="btn-hero btn-hero-outline" onclick="showQuote()">Get Free Quote</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num">500K+</div>
+            <div class="hero-stat-label">Policyholders</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">25+</div>
+            <div class="hero-stat-label">Years Experience</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">98%</div>
+            <div class="hero-stat-label">Claims Settled</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-icon">🏠</div>
+          <div class="hero-card-text">
+            <h4>AZ Legacy Life Assurance</h4>
+            <p>Whole life protection with participating bonuses</p>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-icon">❤️</div>
+          <div class="hero-card-text">
+            <h4>AZ HealthShield Plus</h4>
+            <p>Comprehensive medical coverage for your family</p>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-icon">🚗</div>
+          <div class="hero-card-text">
+            <h4>AZ Motor Protect</h4>
+            <p>Comprehensive vehicle insurance from SGD 480/yr</p>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-icon">✈️</div>
+          <div class="hero-card-text">
+            <h4>AZ TravelSafe</h4>
+            <p>Single & annual multi-trip travel coverage</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item"><span class="trust-icon">✅</span> MAS Regulated (Singapore)</div>
+      <div class="trust-item"><span class="trust-icon">✅</span> IC Licensed (Philippines)</div>
+      <div class="trust-item"><span class="trust-icon">✅</span> AA Credit Rating by Fitch</div>
+      <div class="trust-item"><span class="trust-icon">✅</span> PDIC Member</div>
+      <div class="trust-item"><span class="trust-icon">✅</span> LIFE Framework Compliant</div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS SECTION -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Our Products</div>
+        <h2 class="section-title">Insurance for Every Need</h2>
+        <p class="section-subtitle">From lifetime protection to daily health cover, AZ Insurance has a product designed around your life stage and goals.</p>
+      </div>
+      <div class="products-grid">
+        <div class="product-card featured" onclick="showProductDetail('legacy-life')">
+          <span class="product-badge">Most Popular</span>
+          <div class="product-icon">🛡️</div>
+          <h3>AZ Legacy Life Assurance</h3>
+          <p>Traditional whole life participating policy with guaranteed lifetime protection and long-term capital growth through non-guaranteed bonuses.</p>
+          <div class="product-tags">
+            <span class="product-tag">Whole Life</span>
+            <span class="product-tag">Participating</span>
+            <span class="product-tag">SGD Denominated</span>
+            <span class="product-tag">MAS Compliant</span>
+          </div>
+          <div class="product-link">Learn more <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('healthshield')">
+          <div class="product-icon">❤️</div>
+          <h3>AZ HealthShield Plus</h3>
+          <p>Integrated medical insurance covering hospitalisation, surgery, specialist outpatient, and critical illness for the whole family.</p>
+          <div class="product-tags">
+            <span class="product-tag">Health</span>
+            <span class="product-tag">Critical Illness</span>
+            <span class="product-tag">Family Plan</span>
+          </div>
+          <div class="product-link">Learn more <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('term-life')">
+          <div class="product-icon">⏱️</div>
+          <h3>AZ Term Shield</h3>
+          <p>Affordable term life insurance with guaranteed renewal, providing high coverage during your most financially critical years.</p>
+          <div class="product-tags">
+            <span class="product-tag">Term Life</span>
+            <span class="product-tag">High Coverage</span>
+            <span class="product-tag">Renewable</span>
+          </div>
+          <div class="product-link">Learn more <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('motor')">
+          <div class="product-icon">🚗</div>
+          <h3>AZ Motor Protect</h3>
+          <p>Comprehensive and third-party motor insurance with 24/7 roadside assistance and a network of 300+ authorised workshops.</p>
+          <div class="product-tags">
+            <span class="product-tag">Motor</span>
+            <span class="product-tag">Comprehensive</span>
+            <span class="product-tag">Third-Party</span>
+          </div>
+          <div class="product-link">Learn more <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('travel')">
+          <div class="product-icon">✈️</div>
+          <h3>AZ TravelSafe</h3>
+          <p>Single-trip and annual travel insurance with emergency medical evacuation, trip cancellation, and baggage loss coverage.</p>
+          <div class="product-tags">
+            <span class="product-tag">Travel</span>
+            <span class="product-tag">Annual Plan</span>
+            <span class="product-tag">Evacuation</span>
+          </div>
+          <div class="product-link">Learn more <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('home')">
+          <div class="product-icon">🏡</div>
+          <h3>AZ HomeGuard</h3>
+          <p>Protect your home and contents against fire, flood, theft, and third-party liability with customisable coverage tiers.</p>
+          <div class="product-tags">
+            <span class="product-tag">Home & Contents</span>
+            <span class="product-tag">Fire</span>
+            <span class="product-tag">Liability</span>
+          </div>
+          <div class="product-link">Learn more <span>→</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY AZ -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Why Choose AZ</div>
+        <h2 class="section-title">Built on Trust. Backed by Strength.</h2>
+        <p class="section-subtitle">For over 25 years, AZ Insurance has protected families and businesses with financial certainty and compassionate service.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🏆</div>
+          <h3>AA Credit Rating</h3>
+          <p>Independently rated AA by Fitch Ratings, reflecting our strong financial stability and claims-paying ability.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">⚡</div>
+          <h3>Fast Claims Processing</h3>
+          <p>98% of claims settled within 5 business days. Dedicated claims managers assigned to every case.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🌏</div>
+          <h3>Dual Jurisdiction</h3>
+          <p>Fully licensed and compliant in both Singapore (MAS) and the Philippines (IC), with local expertise in both markets.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">📱</div>
+          <h3>Digital-First Service</h3>
+          <p>Manage your policies, submit claims, and talk to an agent via the AZ Insurance app — available on iOS and Android.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">👨‍👩‍👧</div>
+          <h3>Family-Centred Design</h3>
+          <p>Our products are structured around life stages — from young families to retirement — ensuring seamless coverage transitions.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🔒</div>
+          <h3>Transparent Pricing</h3>
+          <p>No hidden fees. All costs are clearly disclosed at point of sale and embedded in your premium schedule.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREMIUM CALCULATOR -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Premium Estimator</div>
+        <h2 class="section-title">How Much Will It Cost?</h2>
+        <p class="section-subtitle">Get an instant indicative premium in seconds. Our advisors will follow up with a tailored illustration.</p>
+      </div>
+      <div class="calc-wrapper">
+        <div class="calc-grid">
+          <div class="form-group">
+            <label>Product Type</label>
+            <select class="form-control" id="calc-product" onchange="calcPremium()">
+              <option value="whole-life">AZ Legacy Life Assurance</option>
+              <option value="health">AZ HealthShield Plus</option>
+              <option value="term">AZ Term Shield</option>
+              <option value="motor">AZ Motor Protect</option>
+              <option value="travel">AZ TravelSafe</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Age of Life Assured</label>
+            <input type="number" class="form-control" id="calc-age" value="35" min="18" max="65" oninput="calcPremium()">
+          </div>
+          <div class="form-group">
+            <label>Sum Assured / Coverage</label>
+            <select class="form-control" id="calc-sum" onchange="calcPremium()">
+              <option value="100000">SGD 100,000</option>
+              <option value="250000">SGD 250,000</option>
+              <option value="500000">SGD 500,000</option>
+              <option value="1000000">SGD 1,000,000</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Payment Term</label>
+            <select class="form-control" id="calc-term" onchange="calcPremium()">
+              <option value="10">10 Years</option>
+              <option value="15">15 Years</option>
+              <option value="20">20 Years</option>
+              <option value="65">Pay to Age 65</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result">
+          <div class="result-label">Estimated Annual Premium</div>
+          <div class="result-value" id="calc-result-val">SGD 2,840</div>
+          <div class="result-note">Indicative only. Final premium subject to underwriting. Currency: SGD.</div>
+        </div>
+        <button class="btn-full" onclick="showQuote()">Get Detailed Illustration →</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Speak to an Advisor</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Customer Stories</div>
+        <h2 class="section-title">What Our Clients Say</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"When my husband passed away unexpectedly, AZ Insurance processed our claim within 4 days. The claims team was incredibly compassionate and professional throughout. I cannot thank them enough."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:#1B5E20">LT</div>
+            <div class="author-info">
+              <h4>Lim Tze Wei</h4>
+              <p>AZ Legacy Life Assurance • Singapore</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I've been with AZ for 12 years. My family's HealthShield policy covered my mother's bypass surgery — over PHP 1.2 million — without any disputes. Truly world-class service."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:#388E3C">RG</div>
+            <div class="author-info">
+              <h4>Ricardo Garcia</h4>
+              <p>AZ HealthShield Plus • Manila, Philippines</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★☆</div>
+          <p class="testimonial-text">"The AZ Motor Protect roadside assistance saved me during a late-night breakdown on the AYE. Response time was under 30 minutes. My renewal was completely seamless online."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:#2E7D32">AK</div>
+            <div class="author-info">
+              <h4>Arjun Krishnaswamy</h4>
+              <p>AZ Motor Protect • Singapore</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <h2>Ready to Protect What Matters Most?</h2>
+    <p>Speak to a licensed AZ Insurance advisor today. No obligation, no pressure.</p>
+    <div class="cta-band-btns">
+      <button class="btn-hero btn-hero-white" onclick="showQuote()">Get a Free Quote</button>
+      <button class="btn-hero btn-hero-outline" onclick="showPage('contact')">Talk to an Advisor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PRODUCTS PAGE ===================== -->
+<div id="page-products" class="page">
+  <section style="background: linear-gradient(135deg, #0D3B14, #2E7D32); color:white; padding: 4rem 2rem; text-align:center;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div class="section-tag" style="color:#69F0AE;">Our Products</div>
+      <h1 style="font-size:2.4rem; font-weight:700; margin:0.5rem 0 1rem;">Complete Insurance Solutions</h1>
+      <p style="font-size:1.05rem; opacity:0.85; max-width:600px; margin:0 auto;">Browse our full range of life, health, motor, travel, and home insurance products available in Singapore and the Philippines.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Life Insurance</div>
+        <h2 class="section-title">Lifetime & Term Protection</h2>
+      </div>
+      <div class="products-grid">
+        <div class="product-card featured" onclick="showProductDetail('legacy-life')">
+          <span class="product-badge">Best Value</span>
+          <div class="product-icon">🛡️</div>
+          <h3>AZ Legacy Life Assurance</h3>
+          <p>Whole life participating insurance with guaranteed cash value accumulation and annual reversionary bonuses.</p>
+          <div class="product-tags"><span class="product-tag">Whole Life</span><span class="product-tag">Participating</span><span class="product-tag">TPD Benefit</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('term-life')">
+          <div class="product-icon">⏱️</div>
+          <h3>AZ Term Shield</h3>
+          <p>High coverage term life for 10, 20, or 30-year terms. Convertible to whole life without re-underwriting.</p>
+          <div class="product-tags"><span class="product-tag">Term Life</span><span class="product-tag">Convertible</span><span class="product-tag">Renewable</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('endowment')">
+          <div class="product-icon">📈</div>
+          <h3>AZ GrowSure Endowment</h3>
+          <p>A 10 or 15-year savings-linked endowment plan combining capital protection with competitive projected returns.</p>
+          <div class="product-tags"><span class="product-tag">Endowment</span><span class="product-tag">Savings</span><span class="product-tag">Capital Protected</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:4rem;">
+        <div class="section-tag">Health & Medical</div>
+        <h2 class="section-title">Health Protection</h2>
+      </div>
+      <div class="products-grid">
+        <div class="product-card" onclick="showProductDetail('healthshield')">
+          <div class="product-icon">❤️</div>
+          <h3>AZ HealthShield Plus</h3>
+          <p>Comprehensive hospitalisation and surgical cover with a panel of 800+ hospitals across Singapore and the Philippines.</p>
+          <div class="product-tags"><span class="product-tag">Hospitalisation</span><span class="product-tag">Surgical</span><span class="product-tag">Outpatient</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('critical')">
+          <div class="product-icon">🩺</div>
+          <h3>AZ Critical Care Shield</h3>
+          <p>Lump-sum payout upon diagnosis of 37 critical illnesses including cancer, heart attack, and stroke.</p>
+          <div class="product-tags"><span class="product-tag">Critical Illness</span><span class="product-tag">37 Conditions</span><span class="product-tag">Lump Sum</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:4rem;">
+        <div class="section-tag">General Insurance</div>
+        <h2 class="section-title">Motor, Travel & Home</h2>
+      </div>
+      <div class="products-grid">
+        <div class="product-card" onclick="showProductDetail('motor')">
+          <div class="product-icon">🚗</div>
+          <h3>AZ Motor Protect</h3>
+          <p>Comprehensive or third-party motor cover with 24/7 roadside assistance and cashless claims at 300+ workshops.</p>
+          <div class="product-tags"><span class="product-tag">Comprehensive</span><span class="product-tag">Third-Party</span><span class="product-tag">Roadside Assist</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('travel')">
+          <div class="product-icon">✈️</div>
+          <h3>AZ TravelSafe</h3>
+          <p>Annual multi-trip and single-trip travel insurance covering 190 countries with emergency medical evacuation.</p>
+          <div class="product-tags"><span class="product-tag">Travel</span><span class="product-tag">190 Countries</span><span class="product-tag">Evacuation</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+        <div class="product-card" onclick="showProductDetail('home')">
+          <div class="product-icon">🏡</div>
+          <h3>AZ HomeGuard</h3>
+          <p>Comprehensive home and contents insurance covering fire, flood, burglary, and personal liability up to SGD 1 million.</p>
+          <div class="product-tags"><span class="product-tag">Home</span><span class="product-tag">Contents</span><span class="product-tag">Liability</span></div>
+          <div class="product-link">View Details <span>→</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== PRODUCT DETAIL PAGE ===================== -->
+<div id="page-product-detail" class="page">
+  <div class="product-hero">
+    <div class="product-hero-inner">
+      <div class="breadcrumb" onclick="showPage('products')">
+        <span>← Products</span>
+      </div>
+      <div class="tag-pill" id="detail-tag">Life Insurance</div>
+      <h1 id="detail-title">AZ Legacy Life Assurance</h1>
+      <p class="subtitle" id="detail-subtitle">Traditional Whole Life Insurance with Participating Component</p>
+    </div>
+  </div>
+  <div class="product-detail-content">
+    <div id="detail-main">
+      <!-- filled by JS -->
+    </div>
+    <div id="detail-sidebar">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CLAIMS PAGE ===================== -->
+<div id="page-claims" class="page">
+  <section style="background: linear-gradient(135deg, #0D3B14, #2E7D32); color:white; padding: 4rem 2rem; text-align:center;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <h1 style="font-size:2.4rem; font-weight:700; margin-bottom:1rem;">Claims Centre</h1>
+      <p style="font-size:1.05rem; opacity:0.85; max-width:600px; margin:0 auto;">We process 98% of claims within 5 business days. Your dedicated claims manager will guide you every step of the way.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">How to File</div>
+        <h2 class="section-title">Simple 4-Step Claims Process</h2>
+      </div>
+      <div class="claims-steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Notify AZ Insurance</h3>
+          <p>Call our 24/7 claims hotline (+65 6222 0000 / +63 2 8888 0000) or submit online via MyAZ portal within 30 days of the event.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Submit Documents</h3>
+          <p>Upload or courier required documents. Your claims manager will send a personalised checklist within 1 business day of notification.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Assessment</h3>
+          <p>Our experienced claims assessors review your submission. We may request a medical examination or specialist report for certain claims.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Disbursement</h3>
+          <p>Approved claim amounts are disbursed via bank transfer within 5 business days. Death claims include a bereavement support call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Documentation Guide</div>
+        <h2 class="section-title">What You'll Need</h2>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem;">
+        <div class="sidebar-card">
+          <h3>🛡️ Life & TPD Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Completed AZ Claim Form (Form LC-01)</li>
+            <li><span class="benefit-check">✓</span> Original Policy Document or Policy Number</li>
+            <li><span class="benefit-check">✓</span> Certified Death Certificate (for death claims)</li>
+            <li><span class="benefit-check">✓</span> Medical Reports & Specialist Certification (for TPD)</li>
+            <li><span class="benefit-check">✓</span> NRIC / Passport of Claimant & Beneficiary</li>
+            <li><span class="benefit-check">✓</span> Bank Account Details for Disbursement</li>
+          </ul>
+        </div>
+        <div class="sidebar-card">
+          <h3>❤️ Health & Medical Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Hospital Discharge Summary</li>
+            <li><span class="benefit-check">✓</span> Itemised Medical Bills & Receipts</li>
+            <li><span class="benefit-check">✓</span> Doctor's Referral Letters & Lab Reports</li>
+            <li><span class="benefit-check">✓</span> Completed AZ Claim Form (Form HC-02)</li>
+            <li><span class="benefit-check">✓</span> Insurance Guarantee Letter (if used)</li>
+          </ul>
+        </div>
+        <div class="sidebar-card">
+          <h3>🚗 Motor & General Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Police Report (if accident or theft)</li>
+            <li><span class="benefit-check">✓</span> Completed Vehicle Accident Form</li>
+            <li><span class="benefit-check">✓</span> Photos of Damage</li>
+            <li><span class="benefit-check">✓</span> Driver's Licence & Vehicle Registration</li>
+            <li><span class="benefit-check">✓</span> Repair Estimates from Authorised Workshop</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Track Your Claim</div>
+        <h2 class="section-title">Check Claim Status</h2>
+      </div>
+      <div class="calc-wrapper">
+        <div class="form-group" style="margin-bottom:1.25rem;">
+          <label>Policy Number</label>
+          <input type="text" class="form-control" placeholder="e.g. AZ-SG-WL-2024-0098721" id="claim-policy">
+        </div>
+        <div class="form-group" style="margin-bottom:1.25rem;">
+          <label>Claim Reference Number</label>
+          <input type="text" class="form-control" placeholder="e.g. CLM-2025-0048392" id="claim-ref">
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label>NRIC / Passport Number (last 4 characters)</label>
+          <input type="text" class="form-control" placeholder="e.g. 678A" maxlength="4" id="claim-nric">
+        </div>
+        <button class="btn-full" onclick="trackClaim()">Track Claim Status</button>
+        <div id="claim-result" style="margin-top:1rem; display:none;" class="calc-result">
+          <div class="result-label">Claim Status</div>
+          <div class="result-value" style="font-size:1.4rem; color:var(--green-dark);">Under Assessment</div>
+          <div class="result-note">CLM-2025-0048392 · Received 14 Jun 2025 · Assessor: Priya Nair</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== ABOUT PAGE ===================== -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <h1>Our Story</h1>
+    <p>Built on three decades of trust, AZ Insurance is one of Southeast Asia's most respected life and general insurance groups.</p>
+  </div>
+  <section class="section">
+    <div class="about-content">
+      <div class="section-tag">Who We Are</div>
+      <h2 class="section-title" style="margin-bottom:1.5rem;">Protecting Families Since 1998</h2>
+      <p>AZ Insurance was founded in 1998 in Singapore with a singular mission: to make world-class insurance protection accessible to every family in Southeast Asia. What began as a boutique life insurance firm with a team of 40 has grown into a regional powerhouse with over 3,200 employees, 500,000 active policyholders, and dual regulatory licences in Singapore and the Philippines.</p>
+      <p>Our Singapore operations are fully regulated and supervised by the Monetary Authority of Singapore (MAS), while our Philippine entity — AZ Insurance Corporation — holds a Certificate of Authority from the Insurance Commission (IC) and is a registered PDIC member institution. We maintain an AA credit rating from Fitch Ratings, reflecting our long-term financial strength.</p>
+      <p>At AZ Insurance, we believe that insurance is ultimately a promise — a commitment to be there when life takes an unexpected turn. Every product we build, every policy we issue, and every claim we settle is guided by that core belief. We invest heavily in our people, our technology, and our customer experience so that promise is never just ink on paper.</p>
+    </div>
+  </section>
+
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Leadership</div>
+        <h2 class="section-title">Our Leadership Team</h2>
+      </div>
+      <div class="leadership-grid">
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#1B5E20">AP</div>
+          <h3>Angela Phua</h3>
+          <div class="title">Group Chief Executive Officer</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#2E7D32">MR</div>
+          <h3>Marcus Rodrigues</h3>
+          <div class="title">Chief Financial Officer</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#388E3C">SL</div>
+          <h3>Susan Lim</h3>
+          <div class="title">Chief Actuarial Officer</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#4CAF50">JD</div>
+          <h3>Jose Dela Cruz</h3>
+          <div class="title">CEO, AZ Philippines</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Our Offices</div>
+        <h2 class="section-title">Where to Find Us</h2>
+      </div>
+      <div class="offices-grid">
+        <div class="office-card">
+          <div class="office-flag">🇸🇬</div>
+          <h3>Singapore (Headquarters)</h3>
+          <p><strong>Address:</strong> 8 Marina Boulevard, #32-01, Marina Bay Financial Centre, Singapore 018981<br><br>
+          <strong>Tel:</strong> +65 6222 0000<br>
+          <strong>Email:</strong> sg@azinsurance.com.sg<br>
+          <strong>Hours:</strong> Mon–Fri, 8:30am – 5:30pm SGT</p>
+        </div>
+        <div class="office-card">
+          <div class="office-flag">🇵🇭</div>
+          <h3>Philippines (Manila)</h3>
+          <p><strong>Address:</strong> 24th Floor, GT International Tower, Ayala Avenue, Makati City 1226<br><br>
+          <strong>Tel:</strong> +63 2 8888 0000<br>
+          <strong>Email:</strong> ph@azinsurance.com.ph<br>
+          <strong>Hours:</strong> Mon–Fri, 8:00am – 5:00pm PHT</p>
+        </div>
+        <div class="office-card">
+          <div class="office-flag">🇵🇭</div>
+          <h3>Philippines (Cebu)</h3>
+          <p><strong>Address:</strong> Level 18, Cebu IT Park, Lahug, Cebu City 6000<br><br>
+          <strong>Tel:</strong> +63 32 500 0000<br>
+          <strong>Email:</strong> cebu@azinsurance.com.ph<br>
+          <strong>Hours:</strong> Mon–Fri, 8:00am – 5:00pm PHT</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== FAQ PAGE ===================== -->
+<div id="page-faq" class="page">
+  <section style="background: linear-gradient(135deg, #0D3B14, #2E7D32); color:white; padding: 4rem 2rem; text-align:center;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <h1 style="font-size:2.4rem; font-weight:700; margin-bottom:1rem;">Frequently Asked Questions</h1>
+      <p style="opacity:0.85; max-width:540px; margin:0 auto;">Everything you need to know about AZ Insurance products, claims, and policies.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-inner">
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>What is a participating insurance policy?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">A participating policy means your premiums are pooled into a participating fund managed by AZ Insurance. In addition to guaranteed benefits, you are eligible to receive non-guaranteed bonuses — reversionary bonuses declared annually and a terminal bonus paid at claim, surrender, or maturity. These bonuses reflect the performance of the participating fund and are not contractually guaranteed.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>When does my policy start building cash value?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">For AZ Legacy Life Assurance, the policy begins accumulating guaranteed cash value after the completion of the second policy year. The guaranteed cash value ledger is generated at policy inception and attached to your policy contract so you can see projected values at each policy anniversary.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>What happens if I miss a premium payment?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">AZ Insurance provides a 31-day grace period from the premium due date at no additional cost. If the premium remains unpaid after the grace period, the Automatic Premium Loan (APL) feature activates, advancing the overdue amount as a loan against your accumulated cash value (provided sufficient cash value exists). Interest accrues daily at prevailing market rates. If the total outstanding loan and interest exceed the total cash value, the policy will lapse.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>Can I change my beneficiaries?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">Yes. Beneficiary changes can be made at any time during the policy term by submitting a Beneficiary Change Form (Form BC-04) to any AZ Insurance branch or via the MyAZ portal. Note that for irrevocable beneficiary designations, the consent of all irrevocable beneficiaries is required before a change can be processed.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>What is the TPD definition under AZ Legacy Life?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">Total and Permanent Disability (TPD) is defined as the total and irrecoverable loss of sight in both eyes, or the loss of use of two limbs, or the inability to perform all Activities of Daily Living (ADLs) for a continuous period of at least six months, as certified by an independent specialist. The TPD benefit advances 100% of the Death Benefit and is available up to the policy anniversary nearest the Life Assured's 65th birthday.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>Are AZ Insurance products available to non-citizens / foreigners?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">Yes. In Singapore, AZ Insurance products are available to Singapore Citizens, Permanent Residents, and valid Employment Pass / S Pass / Dependent Pass holders. In the Philippines, most products are available to foreign nationals with valid residency status. Additional underwriting requirements may apply. Please speak to an advisor for your specific situation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>How do surrender charges work?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">If you surrender your AZ Legacy Life Assurance policy within the first 10 policy years, a reduced cash value matrix applies. The precise surrender value at each policy year is specified in the Surrender Value Ledger attached to your policy contract at inception. After the 10th policy year, full surrender value (inclusive of accumulated reversionary bonuses) applies. Early surrender is generally inadvisable as the policy is structured for long-term value accumulation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)"><span>How long does a claim take to process?</span><span class="faq-toggle">+</span></div>
+          <div class="faq-a">AZ Insurance is committed to settling 98% of straightforward claims within 5 business days of receiving a complete set of documents. Complex claims requiring specialist medical review or investigation may take longer. Your dedicated claims manager will keep you updated at every stage and provide an expected timeline within 2 business days of notification.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== CONTACT PAGE ===================== -->
+<div id="page-contact" class="page">
+  <section style="background: linear-gradient(135deg, #0D3B14, #2E7D32); color:white; padding: 4rem 2rem; text-align:center;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <h1 style="font-size:2.4rem; font-weight:700; margin-bottom:1rem;">Contact Us</h1>
+      <p style="opacity:0.85; max-width:500px; margin:0 auto;">Our licensed advisors are ready to help. Reach out and we'll respond within 1 business day.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>Get in Touch</h2>
+          <p>Whether you need a product recommendation, policy servicing, or just want to understand your options — our team is here.</p>
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div>
+              <h4>Singapore Hotline</h4>
+              <p>+65 6222 0000<br>Mon–Fri, 8:30am – 5:30pm SGT</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div>
+              <h4>Philippines Hotline</h4>
+              <p>+63 2 8888 0000<br>Mon–Fri, 8:00am – 5:00pm PHT</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📧</div>
+            <div>
+              <h4>Email</h4>
+              <p>customercare@azinsurance.com.sg<br>ph.care@azinsurance.com.ph</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">💬</div>
+            <div>
+              <h4>Live Chat</h4>
+              <p>Available 24/7 via the MyAZ app and website chatbot for policy queries and basic claims guidance.</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-card">
+          <h3>Send Us a Message</h3>
+          <div class="form-row" style="margin-bottom:1.25rem;">
+            <div class="form-group"><label>First Name</label><input type="text" class="form-control" placeholder="e.g. Maria"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" class="form-control" placeholder="e.g. Santos"></div>
+          </div>
+          <div class="form-group-full"><label style="font-size:.825rem; font-weight:600; color:var(--text-mid);">Email Address</label><input type="email" class="form-control" placeholder="you@example.com" style="width:100%; margin-top:.5rem;"></div>
+          <div class="form-group-full" style="margin-top:1.25rem;"><label style="font-size:.825rem; font-weight:600; color:var(--text-mid);">Country</label>
+            <select class="form-control" style="width:100%; margin-top:.5rem;">
+              <option>Singapore</option>
+              <option>Philippines</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group-full" style="margin-top:1.25rem;"><label style="font-size:.825rem; font-weight:600; color:var(--text-mid);">Enquiry Type</label>
+            <select class="form-control" style="width:100%; margin-top:.5rem;">
+              <option>New Policy / Quote</option>
+              <option>Existing Policy Servicing</option>
+              <option>Claims Enquiry</option>
+              <option>Complaint</option>
+              <option>General Enquiry</option>
+            </select>
+          </div>
+          <div class="form-group-full" style="margin-top:1.25rem;"><label style="font-size:.825rem; font-weight:600; color:var(--text-mid);">Message</label>
+            <textarea class="form-control" placeholder="How can we help you today?" style="width:100%; margin-top:.5rem; min-height:100px; resize:vertical;"></textarea>
+          </div>
+          <button class="btn-full" style="margin-top:1.5rem;" onclick="submitContact()">Send Message</button>
+          <div id="contact-success" class="success-msg">✅ Thank you! We'll get back to you within 1 business day.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+          <svg width="140" height="36" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#69F0AE"/>
+            <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#A5D6A7"/>
+            <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="#0D3B14"/>
+            <text x="44" y="30" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="800" fill="white">AZ</text>
+            <text x="72" y="30" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="400" fill="rgba(255,255,255,0.85)"> Insurance</text>
+          </svg>
+        </div>
+        <p>Protecting families and businesses across Singapore and the Philippines since 1998.</p>
+        <div class="reg-badges">
+          <span class="reg-badge">MAS Licensed</span>
+          <span class="reg-badge">IC Certified</span>
+          <span class="reg-badge">Fitch AA</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a onclick="showProductDetail('legacy-life')">AZ Legacy Life</a></li>
+          <li><a onclick="showProductDetail('healthshield')">AZ HealthShield Plus</a></li>
+          <li><a onclick="showProductDetail('term-life')">AZ Term Shield</a></li>
+          <li><a onclick="showProductDetail('motor')">AZ Motor Protect</a></li>
+          <li><a onclick="showProductDetail('travel')">AZ TravelSafe</a></li>
+          <li><a onclick="showProductDetail('home')">AZ HomeGuard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a onclick="showPage('about')">About Us</a></li>
+          <li><a onclick="showPage('claims')">Claims Centre</a></li>
+          <li><a onclick="showPage('faq')">FAQ</a></li>
+          <li><a onclick="showPage('contact')">Contact</a></li>
+          <li><a>News & Media</a></li>
+          <li><a>Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a>Privacy Policy</a></li>
+          <li><a>Terms of Use</a></li>
+          <li><a>Regulatory Disclosures</a></li>
+          <li><a>Financial Adviser Act</a></li>
+          <li><a>Product Highlights Sheets</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AZ Insurance Ltd. Registered in Singapore (UEN: 199812345A). AZ Insurance Corporation registered in the Philippines (SEC Reg. No. AS094-12345). All rights reserved. This is a fictional entity for demonstration purposes.</p>
+      <div class="footer-bottom-links">
+        <a>Privacy</a>
+        <a>Terms</a>
+        <a>Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const productData = {
+  'legacy-life': {
+    tag: 'Life Insurance',
+    title: 'AZ Legacy Life Assurance',
+    subtitle: 'Traditional Whole Life Insurance with Participating Component — MAS Compliant',
+    main: `
+      <div class="detail-section">
+        <h2>Product Overview</h2>
+        <p>AZ Legacy Life Assurance is a traditional whole life participating insurance policy that provides guaranteed lifetime financial protection combined with long-term capital growth through non-guaranteed bonuses. Premiums paid are pooled into the AZ Singapore Participating Fund, which is conservatively managed via a diversified mix of fixed-income securities and global equities.</p>
+        <p>The policy accumulates a guaranteed cash value over time, supplemented by reversionary and terminal bonuses declared annually based on the performance of the participating fund. This policy is designed to ensure permanent peace of mind and structured estate planning for families.</p>
+      </div>
+      <div class="detail-section">
+        <h2>Eligibility</h2>
+        <table class="detail-table">
+          <tr><th>Criterion</th><th>Details</th></tr>
+          <tr><td>Policy Owner Minimum Age</td><td>18 Years Completed</td></tr>
+          <tr><td>Life Assured Minimum Age</td><td>15 Days Completed</td></tr>
+          <tr><td>Maximum Entry Age</td><td>65 Years (Nearest Birthday)</td></tr>
+          <tr><td>Policy Maturity</td><td>Lifetime Protection up to Age 99</td></tr>
+          <tr><td>Minimum Sum Assured</td><td>SGD 100,000</td></tr>
+          <tr><td>Maximum Sum Assured</td><td>Subject to Medical & Financial Underwriting</td></tr>
+          <tr><td>Base Currency</td><td>Singapore Dollar (SGD)</td></tr>
+        </table>
+      </div>
+      <div class="detail-section">
+        <h2>Premium Schedule</h2>
+        <table class="detail-table">
+          <tr><th>Payment Term</th><th>Payment Modes</th><th>Settlement Channels</th></tr>
+          <tr><td>10 Years</td><td rowspan="4">Monthly, Quarterly, Semi-Annual, Annual</td><td rowspan="4">GIRO, PayNow, Major Credit Cards</td></tr>
+          <tr><td>15 Years</td></tr>
+          <tr><td>20 Years</td></tr>
+          <tr><td>Pay to Age 65</td></tr>
+        </table>
+        <p style="margin-top:1rem; font-size:0.85rem; color:var(--text-light);">A 31-day grace period applies. Automatic Premium Loan (APL) activates if premium remains unpaid after grace period, subject to sufficient cash value.</p>
+      </div>
+      <div class="detail-section">
+        <h2>Core Benefits</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div><strong>Death Benefit:</strong> Guaranteed Basic Sum Assured + Accumulated Non-Guaranteed Reversionary Bonuses + Non-Guaranteed Terminal Bonus, less any outstanding policy loans.</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Total & Permanent Disability (TPD) Benefit:</strong> Advances 100% of Death Benefit upon certified TPD diagnosis prior to policy anniversary nearest Age 65.</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Reversionary Bonus:</strong> Non-guaranteed annual bonus added to policy face value. Once declared, becomes guaranteed and cannot be revoked.</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Terminal Bonus:</strong> Non-guaranteed one-time bonus paid on maturity, death, or full surrender. Calculated as a percentage of accumulated reversionary bonuses.</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Guaranteed Cash Value:</strong> Accumulated from end of Year 2. Full surrender value ledger provided at policy inception.</div></li>
+        </ul>
+      </div>
+      <div class="detail-section">
+        <h2>Fees & Charges</h2>
+        <table class="detail-table">
+          <tr><th>Fee</th><th>Amount</th></tr>
+          <tr><td>Fund Management Fee</td><td>1.00% p.a. (integrated into participating fund)</td></tr>
+          <tr><td>Policy Surrender Penalty</td><td>Reduced cash value matrix applies in first 10 policy years (see Surrender Value Ledger)</td></tr>
+          <tr><td>Distribution & Underwriting Fees</td><td>Integrated into premium schedule (no separate charges)</td></tr>
+        </table>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card">
+        <h3>Key Parameters</h3>
+        <div class="sidebar-highlight"><div class="label">Minimum Sum Assured</div><div class="value">SGD 100,000</div></div>
+        <div class="sidebar-highlight"><div class="label">Entry Age</div><div class="value">15 days – 65 years</div></div>
+        <div class="sidebar-highlight"><div class="label">Coverage Duration</div><div class="value">To Age 99</div></div>
+        <div class="sidebar-highlight"><div class="label">Fund Management Fee</div><div class="value">1.00% p.a.</div></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>Get Protected Today</h3>
+        <button class="btn-full" onclick="showQuote()">Get a Free Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Talk to an Advisor</button>
+      </div>
+      <div class="sidebar-card">
+        <h3>Document Reference</h3>
+        <p style="font-size:0.82rem; color:var(--text-mid);">AZ-WL-SG-2026-V1<br>Regulated by the Monetary Authority of Singapore (MAS).<br><br>This product is a protected policy under the Policy Owners' Protection (PPF) Scheme administered by the Singapore Deposit Insurance Corporation (SDIC).</p>
+      </div>`
+  },
+  'healthshield': {
+    tag: 'Health Insurance',
+    title: 'AZ HealthShield Plus',
+    subtitle: 'Comprehensive Medical Insurance for Individuals & Families',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ HealthShield Plus is a comprehensive Integrated Shield Plan (ISP) offering hospitalisation, surgical, and outpatient specialist coverage across a panel of 800+ hospitals in Singapore and the Philippines. The plan integrates with MediShield Life in Singapore, providing seamless top-up protection.</p></div>
+      <div class="detail-section"><h2>Coverage Benefits</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div><strong>Hospitalisation:</strong> Private hospital room & board up to SGD 800/day (Ward A equivalent)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Surgical Fees:</strong> Covered up to Schedule of Benefits limits per procedure</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Specialist Outpatient:</strong> Pre- and post-hospitalisation specialist visits up to 180 days</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Emergency Overseas Treatment:</strong> Up to SGD 50,000 per policy year</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Critical Illness Rider:</strong> Lump sum SGD 50,000 on diagnosis of any of 15 major conditions (optional add-on)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Annual Benefit Limit:</strong> Up to SGD 2,000,000 (Elite Tier)</div></li>
+        </ul>
+      </div>
+      <div class="detail-section"><h2>Plan Tiers</h2>
+        <table class="detail-table">
+          <tr><th>Plan</th><th>Annual Limit</th><th>Hospital Ward</th><th>Co-insurance</th></tr>
+          <tr><td>Standard</td><td>SGD 250,000</td><td>B1</td><td>10%</td></tr>
+          <tr><td>Plus</td><td>SGD 500,000</td><td>A</td><td>5%</td></tr>
+          <tr><td>Elite</td><td>SGD 2,000,000</td><td>Private</td><td>0%</td></tr>
+        </table>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Key Features</h3>
+        <div class="sidebar-highlight"><div class="label">Annual Benefit Limit</div><div class="value">Up to SGD 2M</div></div>
+        <div class="sidebar-highlight"><div class="label">Hospital Network</div><div class="value">800+ Hospitals</div></div>
+        <div class="sidebar-highlight"><div class="label">Family Discount</div><div class="value">Up to 15%</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Get Protected</h3>
+        <button class="btn-full" onclick="showQuote()">Get a Free Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Speak to an Advisor</button>
+      </div>`
+  },
+  'term-life': {
+    tag: 'Life Insurance',
+    title: 'AZ Term Shield',
+    subtitle: 'Affordable High-Coverage Term Life Insurance',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ Term Shield provides high coverage protection for a defined term — ideal for income replacement, mortgage protection, and family security during your peak earning years. Coverage is available for 10, 20, or 30-year terms with guaranteed renewability and convertibility to a whole life policy without re-underwriting.</p></div>
+      <div class="detail-section"><h2>Key Benefits</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div><strong>Death Benefit:</strong> 100% of Sum Assured paid to beneficiaries</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Terminal Illness Benefit:</strong> Early payout of Sum Assured on diagnosis of terminal illness with life expectancy under 12 months</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>TPD Benefit:</strong> 100% Sum Assured payout on Total and Permanent Disability (to Age 65)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Convertibility:</strong> Convert to AZ Legacy Life Assurance without medical re-underwriting at any time during the term</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Renewability:</strong> Guaranteed renewal at term expiry up to Age 75 at prevailing rates</div></li>
+        </ul>
+      </div>
+      <div class="detail-section"><h2>Eligibility</h2>
+        <table class="detail-table">
+          <tr><th>Parameter</th><th>Value</th></tr>
+          <tr><td>Entry Age</td><td>18 – 65 years (nearest birthday)</td></tr>
+          <tr><td>Policy Term</td><td>10, 20, or 30 years</td></tr>
+          <tr><td>Sum Assured</td><td>SGD 100,000 – SGD 5,000,000</td></tr>
+          <tr><td>Premium Mode</td><td>Monthly or Annual</td></tr>
+        </table>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Key Parameters</h3>
+        <div class="sidebar-highlight"><div class="label">Coverage From</div><div class="value">SGD 100,000</div></div>
+        <div class="sidebar-highlight"><div class="label">Term Options</div><div class="value">10 / 20 / 30 Years</div></div>
+        <div class="sidebar-highlight"><div class="label">Starting From</div><div class="value">~SGD 18/month</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Get Protected</h3>
+        <button class="btn-full" onclick="showQuote()">Get a Free Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Speak to an Advisor</button>
+      </div>`
+  },
+  'motor': {
+    tag: 'General Insurance',
+    title: 'AZ Motor Protect',
+    subtitle: 'Comprehensive & Third-Party Vehicle Insurance',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ Motor Protect covers your private car, motorcycle, or commercial vehicle against accidental damage, theft, fire, and third-party liability. Includes 24/7 roadside assistance and access to our network of 300+ authorised workshops in Singapore and 500+ in the Philippines for cashless repairs.</p></div>
+      <div class="detail-section"><h2>Plan Comparison</h2>
+        <table class="detail-table">
+          <tr><th>Benefit</th><th>Third Party</th><th>Third Party Fire & Theft</th><th>Comprehensive</th></tr>
+          <tr><td>Third-Party Liability</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Fire & Theft</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Own Vehicle Damage</td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Windscreen</td><td>❌</td><td>❌</td><td>✅ (Add-on)</td></tr>
+          <tr><td>24/7 Roadside Assist</td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Authorised Workshop</td><td>❌</td><td>❌</td><td>✅</td></tr>
+        </table>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Quick Facts</h3>
+        <div class="sidebar-highlight"><div class="label">Comprehensive From</div><div class="value">SGD 480/year</div></div>
+        <div class="sidebar-highlight"><div class="label">Workshop Network</div><div class="value">300+ Authorised</div></div>
+        <div class="sidebar-highlight"><div class="label">Roadside Assist</div><div class="value">24/7</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Get a Quote</h3>
+        <button class="btn-full" onclick="showQuote()">Motor Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Speak to an Advisor</button>
+      </div>`
+  },
+  'travel': {
+    tag: 'General Insurance',
+    title: 'AZ TravelSafe',
+    subtitle: 'Single-Trip & Annual Multi-Trip Travel Insurance',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ TravelSafe covers 190 countries with emergency medical, evacuation, trip cancellation, baggage loss, and travel delay benefits. Available as single-trip or annual multi-trip plans for individuals, couples, and families.</p></div>
+      <div class="detail-section"><h2>Coverage Highlights</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div><strong>Emergency Medical:</strong> Up to SGD 1,000,000 per trip (Elite Plan)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Medical Evacuation:</strong> Unlimited emergency evacuation to nearest appropriate medical facility</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Trip Cancellation:</strong> Up to SGD 15,000 for covered cancellation reasons</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Baggage Loss:</strong> Up to SGD 8,000 (SGD 500 per article limit)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Travel Delay:</strong> SGD 200 per 6 hours, max SGD 1,000</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Covid-19 Coverage:</strong> Medical and trip disruption coverage included</div></li>
+        </ul>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Quick Facts</h3>
+        <div class="sidebar-highlight"><div class="label">Coverage</div><div class="value">190 Countries</div></div>
+        <div class="sidebar-highlight"><div class="label">Medical Limit</div><div class="value">Up to SGD 1M</div></div>
+        <div class="sidebar-highlight"><div class="label">Single Trip From</div><div class="value">SGD 18</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Buy Now</h3>
+        <button class="btn-full" onclick="showQuote()">Get Travel Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Contact Us</button>
+      </div>`
+  },
+  'home': {
+    tag: 'General Insurance',
+    title: 'AZ HomeGuard',
+    subtitle: 'Home Building & Contents Insurance',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ HomeGuard protects your home's structure and contents against fire, lightning, flood, burst pipes, burglary, and third-party liability. Available for HDB flats, condominiums, landed properties, and rental units.</p></div>
+      <div class="detail-section"><h2>What's Covered</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div><strong>Building Structure:</strong> Rebuild costs up to SGD 2,000,000</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Home Contents:</strong> Up to SGD 100,000 (furniture, electronics, valuables)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Personal Liability:</strong> Up to SGD 1,000,000</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Alternative Accommodation:</strong> Up to SGD 10,000 if home is uninhabitable</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Worldwide Contents:</strong> Personal belongings covered globally up to SGD 5,000</div></li>
+        </ul>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Quick Facts</h3>
+        <div class="sidebar-highlight"><div class="label">Building Cover</div><div class="value">Up to SGD 2M</div></div>
+        <div class="sidebar-highlight"><div class="label">Contents Cover</div><div class="value">Up to SGD 100K</div></div>
+        <div class="sidebar-highlight"><div class="label">Starting From</div><div class="value">SGD 120/year</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Get a Quote</h3>
+        <button class="btn-full" onclick="showQuote()">Home Insurance Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Contact Us</button>
+      </div>`
+  },
+  'endowment': {
+    tag: 'Life Insurance',
+    title: 'AZ GrowSure Endowment',
+    subtitle: 'Savings-Linked Endowment Plan with Capital Protection',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ GrowSure is a 10 or 15-year endowment plan combining life protection with disciplined savings. At maturity, you receive your guaranteed sum plus accumulated non-guaranteed bonuses — a structured way to grow wealth while staying protected.</p></div>
+      <div class="detail-section"><h2>Key Features</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div><strong>Guaranteed Maturity Benefit:</strong> 100% of Sum Assured at maturity</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Non-Guaranteed Bonuses:</strong> Projected return of 3.25% – 4.75% p.a. based on participating fund performance (illustrated)</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Death Benefit:</strong> 105% of total premiums paid or Sum Assured, whichever is higher</div></li>
+          <li><span class="benefit-check">✓</span><div><strong>Policy Loan Facility:</strong> Borrow up to 80% of cash surrender value</div></li>
+        </ul>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Quick Facts</h3>
+        <div class="sidebar-highlight"><div class="label">Plan Term</div><div class="value">10 or 15 Years</div></div>
+        <div class="sidebar-highlight"><div class="label">Projected Return</div><div class="value">3.25–4.75% p.a.</div></div>
+        <div class="sidebar-highlight"><div class="label">Minimum Premium</div><div class="value">SGD 200/month</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Get a Quote</h3>
+        <button class="btn-full" onclick="showQuote()">Get Endowment Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Speak to an Advisor</button>
+      </div>`
+  },
+  'critical': {
+    tag: 'Health Insurance',
+    title: 'AZ Critical Care Shield',
+    subtitle: 'Lump-Sum Critical Illness Coverage for 37 Conditions',
+    main: `
+      <div class="detail-section"><h2>Overview</h2><p>AZ Critical Care Shield pays a lump-sum benefit upon first diagnosis of any of 37 covered critical illnesses, giving you financial freedom to focus on recovery without worrying about income loss or treatment costs.</p></div>
+      <div class="detail-section"><h2>Covered Conditions (Selected)</h2>
+        <ul class="benefit-list">
+          <li><span class="benefit-check">✓</span><div>Cancer of specified severity</div></li>
+          <li><span class="benefit-check">✓</span><div>Heart Attack (Myocardial Infarction)</div></li>
+          <li><span class="benefit-check">✓</span><div>Stroke with permanent neurological deficit</div></li>
+          <li><span class="benefit-check">✓</span><div>Coronary Artery Bypass Graft (CABG)</div></li>
+          <li><span class="benefit-check">✓</span><div>Kidney Failure requiring dialysis</div></li>
+          <li><span class="benefit-check">✓</span><div>Major Organ Transplant</div></li>
+          <li><span class="benefit-check">✓</span><div>Motor Neurone Disease</div></li>
+          <li><span class="benefit-check">✓</span><div>+ 30 Additional Conditions (Full list in policy document)</div></li>
+        </ul>
+      </div>`,
+    sidebar: `
+      <div class="sidebar-card"><h3>Quick Facts</h3>
+        <div class="sidebar-highlight"><div class="label">Conditions Covered</div><div class="value">37 Illnesses</div></div>
+        <div class="sidebar-highlight"><div class="label">Benefit Type</div><div class="value">Lump Sum</div></div>
+        <div class="sidebar-highlight"><div class="label">Coverage Up To</div><div class="value">SGD 1,000,000</div></div>
+      </div>
+      <div class="sidebar-card"><h3>Get a Quote</h3>
+        <button class="btn-full" onclick="showQuote()">Critical Illness Quote</button>
+        <button class="btn-full-ghost" onclick="showPage('contact')">Speak to an Advisor</button>
+      </div>`
+  }
+};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  window.scrollTo(0, 0);
+}
+
+function showProductDetail(productId) {
+  const d = productData[productId];
+  if (!d) return;
+  document.getElementById('detail-tag').textContent = d.tag;
+  document.getElementById('detail-title').textContent = d.title;
+  document.getElementById('detail-subtitle').textContent = d.subtitle;
+  document.getElementById('detail-main').innerHTML = d.main;
+  document.getElementById('detail-sidebar').innerHTML = d.sidebar;
+  showPage('product-detail');
+}
+
+function showQuote() {
+  showPage('contact');
+  setTimeout(() => {
+    document.querySelector('.form-card h3').textContent = 'Request a Quote';
+  }, 100);
+}
+
+function calcPremium() {
+  const product = document.getElementById('calc-product').value;
+  const age = parseInt(document.getElementById('calc-age').value) || 35;
+  const sum = parseInt(document.getElementById('calc-sum').value) || 100000;
+  const term = parseInt(document.getElementById('calc-term').value) || 10;
+  const rates = { 'whole-life': 0.028, 'health': 0.018, 'term': 0.008, 'motor': 0.006, 'travel': 0.0003 };
+  const ageFactor = 1 + (Math.max(age - 30, 0) * 0.02);
+  const termFactor = term <= 10 ? 1.2 : term <= 15 ? 1.0 : term <= 20 ? 0.85 : 0.78;
+  const rate = rates[product] || 0.02;
+  const prem = Math.round(sum * rate * ageFactor * termFactor / 100) * 100;
+  document.getElementById('calc-result-val').textContent = 'SGD ' + prem.toLocaleString();
+}
+
+function trackClaim() {
+  const policy = document.getElementById('claim-policy').value;
+  const ref = document.getElementById('claim-ref').value;
+  const nric = document.getElementById('claim-nric').value;
+  if (policy && ref && nric) {
+    document.getElementById('claim-result').style.display = 'block';
+  } else {
+    alert('Please fill in all fields to track your claim.');
+  }
+}
+
+function submitContact() {
+  document.getElementById('contact-success').style.display = 'block';
+}
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+
+// Init calculator
+calcPremium();
+</script>
+</body>
+</html>

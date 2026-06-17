@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us – AZ Insurance</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-dark: #1B5E20;
+    --green-mid: #2E7D32;
+    --green-main: #388E3C;
+    --green-soft: #4CAF50;
+    --green-pale: #E8F5E9;
+    --green-accent: #00C853;
+    --text-dark: #1A1A2E;
+    --text-mid: #4A4A6A;
+    --text-light: #8A8AAA;
+    --white: #FFFFFF;
+    --bg-light: #F7F9F7;
+    --border: #D8E8D8;
+    --shadow: 0 2px 20px rgba(27,94,32,0.08);
+    --shadow-hover: 0 8px 32px rgba(27,94,32,0.14);
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text-dark); background: var(--white); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; height: 72px; gap: 2rem; }
+  .nav-links { display: flex; gap: 0.25rem; margin-left: 2rem; flex: 1; }
+  .nav-link { padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 500; color: var(--text-mid); border-radius: 8px; transition: all 0.2s; }
+  .nav-link:hover { background: var(--green-pale); color: var(--green-dark); }
+  .nav-link.active { background: var(--green-pale); color: var(--green-dark); }
+  .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+  .btn-ghost { padding: 0.5rem 1.25rem; border: 1.5px solid var(--green-main); color: var(--green-main); background: transparent; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-ghost:hover { background: var(--green-pale); }
+  .btn-primary { padding: 0.5rem 1.25rem; background: var(--green-main); color: white; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-primary:hover { background: var(--green-dark); }
+
+  /* PAGE WRAPPER */
+  .page-wrapper { padding-top: 72px; min-height: 100vh; }
+
+  /* ABOUT HERO */
+  .about-hero { background: linear-gradient(135deg, #0D3B14, #2E7D32); color: white; padding: 6rem 2rem 5rem; text-align: center; position: relative; overflow: hidden; }
+  .about-hero::before { content: ''; position: absolute; top: -40%; right: -10%; width: 70%; height: 180%; background: radial-gradient(ellipse, rgba(0,200,83,0.1) 0%, transparent 70%); }
+  .about-hero-inner { position: relative; max-width: 1200px; margin: 0 auto; }
+  .about-hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.25rem; }
+  .about-hero h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
+  .about-hero h1 span { color: #69F0AE; }
+  .about-hero p { font-size: 1.1rem; opacity: 0.85; max-width: 620px; margin: 0 auto 3rem; line-height: 1.7; }
+  .hero-stats { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; }
+  .hero-stat { text-align: center; padding: 1.25rem 1.75rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius); min-width: 120px; }
+  .hero-stat-num { font-size: 2rem; font-weight: 800; color: #69F0AE; }
+  .hero-stat-label { font-size: 0.78rem; opacity: 0.75; margin-top: 0.25rem; }
+
+  /* SECTION STRUCTURE */
+  .section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green-main); margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; }
+  .section-subtitle { font-size: 1rem; color: var(--text-mid); line-height: 1.7; max-width: 600px; }
+  .section-header { margin-bottom: 3rem; }
+  .section-header.center { text-align: center; }
+  .section-header.center .section-subtitle { margin: 0 auto; }
+  .bg-light { background: var(--bg-light); }
+
+  /* ABOUT CONTENT */
+  .about-content { max-width: 900px; margin: 0 auto; }
+  .about-content p { font-size: 1rem; color: var(--text-mid); line-height: 1.85; margin-bottom: 1.5rem; }
+  .about-content p:last-child { margin-bottom: 0; }
+
+  /* MISSION / VALUES GRID */
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+  .value-card { padding: 2rem; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); transition: box-shadow 0.3s; }
+  .value-card:hover { box-shadow: var(--shadow-hover); }
+  .value-icon { width: 52px; height: 52px; background: var(--green-pale); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.1rem; }
+  .value-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+  .value-card p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.65; }
+
+  /* MILESTONES TIMELINE */
+  .timeline { max-width: 800px; margin: 0 auto; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 28px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { display: flex; gap: 1.5rem; margin-bottom: 2rem; position: relative; }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-dot { width: 58px; height: 58px; border-radius: 50%; background: white; border: 2px solid var(--green-main); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--green-dark); flex-shrink: 0; z-index: 1; box-shadow: var(--shadow); }
+  .timeline-dot.filled { background: var(--green-main); color: white; }
+  .timeline-content { padding: 1.25rem 1.5rem; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); flex: 1; transition: box-shadow 0.2s; }
+  .timeline-content:hover { box-shadow: var(--shadow-hover); }
+  .timeline-content h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.35rem; }
+  .timeline-content p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; }
+
+  /* LEADERSHIP */
+  .leadership-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+  .leader-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem 1.75rem; text-align: center; transition: box-shadow 0.3s; }
+  .leader-card:hover { box-shadow: var(--shadow-hover); }
+  .leader-avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; color: white; margin: 0 auto 1rem; }
+  .leader-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem; }
+  .leader-card .title { font-size: 0.8rem; color: var(--text-light); line-height: 1.4; }
+  .leader-card .bio { font-size: 0.8rem; color: var(--text-mid); margin-top: 0.75rem; line-height: 1.55; }
+
+  /* AWARDS / ACCREDITATIONS */
+  .awards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
+  .award-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; }
+  .award-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .award-card h4 { font-size: 0.875rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.35rem; }
+  .award-card p { font-size: 0.78rem; color: var(--text-light); line-height: 1.5; }
+
+  /* OFFICES */
+  .offices-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+  .office-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; transition: box-shadow 0.3s; }
+  .office-card:hover { box-shadow: var(--shadow-hover); }
+  .office-flag { font-size: 2.2rem; margin-bottom: 1rem; }
+  .office-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.75rem; }
+  .office-card p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.75; }
+
+  /* CTA BAND */
+  .cta-band { background: linear-gradient(135deg, #1B5E20, #388E3C); color: white; padding: 4rem 2rem; text-align: center; }
+  .cta-band h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .cta-band p { font-size: 1rem; opacity: 0.85; margin-bottom: 2rem; }
+  .cta-band-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .btn-hero { padding: 0.875rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-hero-white { background: white; color: var(--green-dark); }
+  .btn-hero-white:hover { background: #E8F5E9; transform: translateY(-1px); }
+  .btn-hero-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+  .btn-hero-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+  /* FOOTER */
+  .footer { background: #0D3B14; color: rgba(255,255,255,0.85); padding: 4rem 2rem 2rem; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.85rem; opacity: 0.7; line-height: 1.7; max-width: 260px; margin-top: 1rem; }
+  .footer-col h4 { font-size: 0.825rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #69F0AE; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.6rem; }
+  .footer-col ul li a { font-size: 0.85rem; opacity: 0.75; transition: opacity 0.2s; }
+  .footer-col ul li a:hover { opacity: 1; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-bottom p { font-size: 0.8rem; opacity: 0.5; }
+  .footer-bottom-links { display: flex; gap: 1.5rem; }
+  .footer-bottom-links a { font-size: 0.8rem; opacity: 0.5; }
+  .footer-bottom-links a:hover { opacity: 0.8; }
+  .reg-badges { display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .reg-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; opacity: 0.8; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 1.25rem; }
+    .timeline::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html">
+      <svg width="160" height="44" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#4CAF50"/>
+        <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#1B5E20"/>
+        <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="white"/>
+        <text x="44" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" font-weight="800" fill="#1B5E20">AZ</text>
+        <text x="72" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" font-weight="400" fill="#2E7D32"> Insurance</text>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="products.html">Products</a>
+      <a class="nav-link" href="claims.html">Claims</a>
+      <a class="nav-link active" href="about.html">About Us</a>
+      <a class="nav-link" href="faq.html">FAQs</a>
+      <a class="nav-link" href="contact.html">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost">Log In</button>
+      <a href="contact.html"><button class="btn-primary">Get a Quote</button></a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <div class="about-hero">
+    <div class="about-hero-inner">
+      <div class="about-hero-eyebrow">🌏 Our Story</div>
+      <h1>Built on Trust.<br><span>Backed by Strength.</span></h1>
+      <p>AZ Insurance is one of Southeast Asia's most respected life and general insurance groups — protecting families and businesses since 1998.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">1998</div>
+          <div class="hero-stat-label">Founded</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">500K+</div>
+          <div class="hero-stat-label">Policyholders</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">3,200+</div>
+          <div class="hero-stat-label">Employees</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">2</div>
+          <div class="hero-stat-label">Jurisdictions</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">AA</div>
+          <div class="hero-stat-label">Fitch Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHO WE ARE -->
+  <section class="section">
+    <div class="section-inner">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+        <div>
+          <div class="section-tag">Who We Are</div>
+          <h2 class="section-title">Protecting Families Since 1998</h2>
+          <div class="about-content">
+            <p>AZ Insurance was founded in 1998 in Singapore with a singular mission: to make world-class insurance protection accessible to every family in Southeast Asia. What began as a boutique life insurance firm with a team of 40 has grown into a regional powerhouse with over 3,200 employees, 500,000 active policyholders, and dual regulatory licences in Singapore and the Philippines.</p>
+            <p>Our Singapore operations are fully regulated and supervised by the Monetary Authority of Singapore (MAS), while our Philippine entity — AZ Insurance Corporation — holds a Certificate of Authority from the Insurance Commission (IC) and is a registered PDIC member institution. We maintain an AA credit rating from Fitch Ratings, reflecting our long-term financial strength.</p>
+            <p>At AZ Insurance, we believe that insurance is ultimately a promise — a commitment to be there when life takes an unexpected turn. Every product we build, every policy we issue, and every claim we settle is guided by that core belief.</p>
+          </div>
+        </div>
+        <!-- Visual column -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="background: var(--green-pale); border-radius: var(--radius-lg); padding: 2rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.75rem;">🎯</div>
+            <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem;">Our Mission</h3>
+            <p style="font-size: 0.875rem; color: var(--text-mid); line-height: 1.65;">To make world-class insurance protection accessible to every family and business across Southeast Asia, delivered with transparency, speed, and compassion.</p>
+          </div>
+          <div style="background: linear-gradient(135deg, #1B5E20, #2E7D32); border-radius: var(--radius-lg); padding: 2rem; color: white;">
+            <div style="font-size: 2rem; margin-bottom: 0.75rem;">👁️</div>
+            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">Our Vision</h3>
+            <p style="font-size: 0.875rem; opacity: 0.85; line-height: 1.65;">To be the most trusted insurance partner in Southeast Asia — measured not by premiums collected, but by lives secured and promises kept.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE VALUES -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">What We Stand For</div>
+        <h2 class="section-title">Our Core Values</h2>
+        <p class="section-subtitle">These principles guide every decision we make — from product design to claims settlement.</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h3>Integrity</h3>
+          <p>We honour every commitment, disclose every cost, and settle every valid claim — because trust is the foundation of everything we do.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">⚡</div>
+          <h3>Speed</h3>
+          <p>98% of claims settled within 5 business days. We invest in technology and people to make sure our customers never wait when it matters most.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌱</div>
+          <h3>Sustainability</h3>
+          <p>We manage our funds with long-term discipline and invest in people, communities, and ESG-aligned portfolios for generational impact.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">💡</div>
+          <h3>Innovation</h3>
+          <p>From digital claim submissions to AI-powered underwriting, we continuously reinvent how insurance is experienced by everyday people.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">❤️</div>
+          <h3>Compassion</h3>
+          <p>Behind every policy is a person. We train our people to lead with empathy, especially during claims — life's most vulnerable moments.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌏</div>
+          <h3>Regional Expertise</h3>
+          <p>Deep local knowledge in Singapore and the Philippines means our products are built for the real financial realities of Southeast Asian families.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MILESTONES TIMELINE -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Our Journey</div>
+        <h2 class="section-title">Key Milestones</h2>
+        <p class="section-subtitle">From a small Singapore office to a regional insurance group — our story, year by year.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot filled">1998</div>
+          <div class="timeline-content">
+            <h4>Founded in Singapore</h4>
+            <p>AZ Insurance Ltd. incorporated in Singapore with 40 employees and a founding capital of SGD 50 million. First product: AZ Legacy Life Assurance.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2003</div>
+          <div class="timeline-content">
+            <h4>MAS Full Insurance Licence</h4>
+            <p>Awarded full composite insurance licence by the Monetary Authority of Singapore, enabling both life and general insurance operations under one entity.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2008</div>
+          <div class="timeline-content">
+            <h4>Philippines Expansion</h4>
+            <p>AZ Insurance Philippines Inc. established in Makati City, obtaining a Certificate of Authority from the Insurance Commission of the Philippines.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2013</div>
+          <div class="timeline-content">
+            <h4>100,000 Policyholders</h4>
+            <p>Crossed the 100,000 active policyholders milestone. Launched AZ Maxilink Prime VUL — the company's first variable universal life product in the Philippines.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2017</div>
+          <div class="timeline-content">
+            <h4>Bancassurance Partnerships</h4>
+            <p>Signed exclusive bancassurance distribution agreements with BPI and Metrobank in the Philippines, significantly expanding retail distribution reach.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2020</div>
+          <div class="timeline-content">
+            <h4>MyAZ Digital Platform Launch</h4>
+            <p>Launched the MyAZ mobile app enabling digital policy management, online claims submission, and 24/7 customer support for 250,000+ users.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot filled">2024</div>
+          <div class="timeline-content">
+            <h4>AA Credit Rating by Fitch</h4>
+            <p>Independently rated AA by Fitch Ratings — the first Singapore-Philippines dual-jurisdiction insurer to achieve this rating, reflecting exceptional financial strength.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot filled">2026</div>
+          <div class="timeline-content">
+            <h4>500,000 Policyholders &amp; 20-Product Portfolio</h4>
+            <p>AZ Insurance reaches 500,000 active policyholders across both markets with a full 20-product portfolio spanning life, health, motor, travel, home, and investment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Leadership</div>
+        <h2 class="section-title">Our Leadership Team</h2>
+        <p class="section-subtitle">Experienced professionals with deep expertise across insurance, finance, and technology.</p>
+      </div>
+      <div class="leadership-grid">
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#1B5E20">AP</div>
+          <h3>Angela Phua</h3>
+          <div class="title">Group Chief Executive Officer</div>
+          <div class="bio">25 years in insurance and financial services. Former MD at Prudential Singapore. MBA from INSEAD.</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#2E7D32">MR</div>
+          <h3>Marcus Rodrigues</h3>
+          <div class="title">Chief Financial Officer</div>
+          <div class="bio">CFA Charterholder. Previously Group CFO at Great Eastern Holdings. Expert in participating fund management.</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#388E3C">SL</div>
+          <h3>Susan Lim</h3>
+          <div class="title">Chief Actuarial Officer</div>
+          <div class="bio">Fellow of the Institute and Faculty of Actuaries (FIA). 20 years experience in life and health product pricing across Asia.</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#4CAF50">JD</div>
+          <h3>Jose Dela Cruz</h3>
+          <div class="title">CEO, AZ Philippines</div>
+          <div class="bio">Led AZ Philippines since 2014. Former President of Sun Life Philippines. Board member of the Insurance Commission advisory council.</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#0D3B14">RT</div>
+          <h3>Rachel Tan</h3>
+          <div class="title">Chief Technology Officer</div>
+          <div class="bio">Built the MyAZ digital platform from scratch. Former VP Engineering at Grab Financial. MSc in Computer Science from NUS.</div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-avatar" style="background:#00695C">KN</div>
+          <h3>Krishnan Nair</h3>
+          <div class="title">Chief Claims Officer</div>
+          <div class="bio">Architect of AZ's industry-leading 5-day claims settlement standard. 18 years in claims operations across Southeast Asia.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AWARDS & ACCREDITATIONS -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Recognition</div>
+        <h2 class="section-title">Awards &amp; Accreditations</h2>
+        <p class="section-subtitle">Independent recognition of our financial strength, service quality, and industry leadership.</p>
+      </div>
+      <div class="awards-grid">
+        <div class="award-card">
+          <div class="award-icon">🏆</div>
+          <h4>Fitch Ratings AA</h4>
+          <p>AA long-term insurer financial strength rating since 2024</p>
+        </div>
+        <div class="award-card">
+          <div class="award-icon">🥇</div>
+          <h4>Best Life Insurer SG</h4>
+          <p>Insurance Asia Awards — Best Life Insurance Company, Singapore 2024</p>
+        </div>
+        <div class="award-card">
+          <div class="award-icon">🌟</div>
+          <h4>MAS Gold Standard</h4>
+          <p>MAS Financial Institution Supervision Rating — Gold, 2023 &amp; 2024</p>
+        </div>
+        <div class="award-card">
+          <div class="award-icon">🎖️</div>
+          <h4>IC Best Insurer PH</h4>
+          <p>Insurance Commission Philippines — Outstanding Insurer Award 2023</p>
+        </div>
+        <div class="award-card">
+          <div class="award-icon">📱</div>
+          <h4>Best InsurTech App</h4>
+          <p>FinTech Singapore Awards — Best Digital Insurance Platform 2023</p>
+        </div>
+        <div class="award-card">
+          <div class="award-icon">💚</div>
+          <h4>ESG Excellence</h4>
+          <p>ASEAN Corporate Governance Scorecard — Top 10% ESG Performer 2024</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFICES -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Our Offices</div>
+        <h2 class="section-title">Where to Find Us</h2>
+        <p class="section-subtitle">Visit any of our offices across Singapore and the Philippines — our advisors are ready to help.</p>
+      </div>
+      <div class="offices-grid">
+        <div class="office-card">
+          <div class="office-flag">🇸🇬</div>
+          <h3>Singapore (Headquarters)</h3>
+          <p>
+            <strong>Address:</strong> 8 Marina Boulevard, #32-01, Marina Bay Financial Centre, Singapore 018981<br><br>
+            <strong>Tel:</strong> +65 6222 0000<br>
+            <strong>Email:</strong> sg@azinsurance.com.sg<br>
+            <strong>Hours:</strong> Mon–Fri, 8:30am – 5:30pm SGT
+          </p>
+        </div>
+        <div class="office-card">
+          <div class="office-flag">🇵🇭</div>
+          <h3>Philippines (Manila)</h3>
+          <p>
+            <strong>Address:</strong> 24th Floor, GT International Tower, Ayala Avenue, Makati City 1226<br><br>
+            <strong>Tel:</strong> +63 2 8888 0000<br>
+            <strong>Email:</strong> ph@azinsurance.com.ph<br>
+            <strong>Hours:</strong> Mon–Fri, 8:00am – 5:00pm PHT
+          </p>
+        </div>
+        <div class="office-card">
+          <div class="office-flag">🇵🇭</div>
+          <h3>Philippines (Cebu)</h3>
+          <p>
+            <strong>Address:</strong> Level 18, Cebu IT Park, Lahug, Cebu City 6000<br><br>
+            <strong>Tel:</strong> +63 32 500 0000<br>
+            <strong>Email:</strong> cebu@azinsurance.com.ph<br>
+            <strong>Hours:</strong> Mon–Fri, 8:00am – 5:00pm PHT
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-band">
+    <h2>Ready to Join 500,000+ Protected Families?</h2>
+    <p>Speak to a licensed AZ Insurance advisor today. No obligation, no pressure.</p>
+    <div class="cta-band-btns">
+      <a href="products.html"><button class="btn-hero btn-hero-white">Explore Products</button></a>
+      <a href="contact.html"><button class="btn-hero btn-hero-outline">Talk to an Advisor</button></a>
+    </div>
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg width="140" height="36" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#69F0AE"/>
+          <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#A5D6A7"/>
+          <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="#0D3B14"/>
+          <text x="44" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="800" fill="white">AZ</text>
+          <text x="72" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="400" fill="rgba(255,255,255,0.85)"> Insurance</text>
+        </svg>
+        <p>Protecting families and businesses across Singapore and the Philippines since 1998.</p>
+        <div class="reg-badges">
+          <span class="reg-badge">MAS Licensed</span>
+          <span class="reg-badge">IC Certified</span>
+          <span class="reg-badge">Fitch AA</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="products.html">AZ Legacy Life</a></li>
+          <li><a href="products.html">AZ HealthShield Plus</a></li>
+          <li><a href="products.html">AZ Term Shield</a></li>
+          <li><a href="products.html">AZ Motor Protect</a></li>
+          <li><a href="products.html">AZ TravelSafe</a></li>
+          <li><a href="products.html">AZ HomeGuard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="claims.html">Claims Centre</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">News &amp; Media</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Regulatory Disclosures</a></li>
+          <li><a href="#">Financial Adviser Act</a></li>
+          <li><a href="#">Product Highlights Sheets</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AZ Insurance Ltd. Registered in Singapore (UEN: 199812345A). AZ Insurance Corporation registered in the Philippines (SEC Reg. No. AS094-12345). All rights reserved. This is a fictional entity for demonstration purposes.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Salesforce Embedded Messaging -->
+<script type='text/javascript'>
+  function initEmbeddedMessaging() {
+    try {
+      embeddedservice_bootstrap.settings.language = 'en_US';
+      embeddedservice_bootstrap.init(
+        '00DHn000008KeZx',
+        'Az_Insurance',
+        'https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326',
+        { scrt2URL: 'https://ap1781425693806.my.salesforce-scrt.com' }
+      );
+    } catch (err) {
+      console.error('Error loading Embedded Messaging: ', err);
+    }
+  }
+</script>
+<script type='text/javascript' src='https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+</body>
+</html>

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products – AZ Insurance</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-dark: #1B5E20; --green-mid: #2E7D32; --green-main: #388E3C;
+    --green-soft: #4CAF50; --green-pale: #E8F5E9; --green-accent: #00C853;
+    --text-dark: #1A1A2E; --text-mid: #4A4A6A; --text-light: #8A8AAA;
+    --white: #FFFFFF; --bg-light: #F7F9F7; --border: #D8E8D8;
+    --shadow: 0 2px 20px rgba(27,94,32,0.08); --shadow-hover: 0 8px 32px rgba(27,94,32,0.15);
+    --radius: 12px; --radius-lg: 18px;
+  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text-dark); background: var(--bg-light); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; height: 68px; gap: 2rem; }
+  .nav-logo { display: flex; align-items: center; cursor: pointer; }
+  .nav-links { display: flex; gap: 0.2rem; margin-left: 1.5rem; flex: 1; }
+  .nav-link { padding: 0.45rem 0.9rem; font-size: 0.875rem; font-weight: 500; color: var(--text-mid); border-radius: 8px; transition: all 0.2s; cursor: pointer; }
+  .nav-link:hover, .nav-link.active { background: var(--green-pale); color: var(--green-dark); }
+  .nav-actions { display: flex; gap: 0.75rem; }
+  .btn-nav-ghost { padding: 0.45rem 1.1rem; border: 1.5px solid var(--green-main); color: var(--green-main); background: transparent; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+  .btn-nav-primary { padding: 0.45rem 1.1rem; background: var(--green-main); color: white; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+  .btn-nav-primary:hover { background: var(--green-dark); }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #0A2E0F 0%, #1B5E20 45%, #2E7D32 100%); color: white; padding: 5.5rem 2rem 4rem; position: relative; overflow: hidden; margin-top: 68px; }
+  .hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 48px; background: var(--bg-light); clip-path: ellipse(55% 100% at 50% 100%); }
+  .hero-inner { max-width: 1280px; margin: 0 auto; text-align: center; position: relative; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.25rem; }
+  .hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 0.9rem; line-height: 1.15; }
+  .hero h1 span { color: #69F0AE; }
+  .hero p { font-size: 1.05rem; opacity: 0.82; max-width: 600px; margin: 0 auto 2rem; line-height: 1.7; }
+  .hero-counters { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+  .hero-counter { text-align: center; }
+  .hero-counter-num { font-size: 1.8rem; font-weight: 800; color: #69F0AE; }
+  .hero-counter-label { font-size: 0.78rem; opacity: 0.72; margin-top: 0.15rem; }
+
+  /* FILTERS STICKY BAR */
+  .filters-bar { position: sticky; top: 68px; z-index: 900; background: white; border-bottom: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .filters-inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+  .filters-top { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0 0; gap: 1rem; flex-wrap: wrap; }
+  .search-box { display: flex; align-items: center; gap: 0.6rem; background: var(--bg-light); border: 1.5px solid var(--border); border-radius: 10px; padding: 0.55rem 1rem; flex: 1; max-width: 320px; }
+  .search-box input { border: none; background: transparent; outline: none; font-size: 0.875rem; color: var(--text-dark); width: 100%; }
+  .search-box input::placeholder { color: var(--text-light); }
+  .jurisdiction-toggle { display: flex; gap: 0.4rem; background: var(--bg-light); padding: 0.3rem; border-radius: 10px; border: 1px solid var(--border); }
+  .jur-btn { padding: 0.4rem 0.9rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-mid); transition: all 0.18s; }
+  .jur-btn.active { background: var(--green-main); color: white; }
+  .category-tabs { display: flex; gap: 0.25rem; padding: 0.75rem 0; overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  .category-tabs::-webkit-scrollbar { display: none; }
+  .cat-tab { padding: 0.45rem 1.1rem; border-radius: 50px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; color: var(--text-mid); background: var(--bg-light); transition: all 0.18s; flex-shrink: 0; }
+  .cat-tab:hover { border-color: var(--green-main); color: var(--green-main); }
+  .cat-tab.active { background: var(--green-main); color: white; border-color: var(--green-main); }
+  .results-count { font-size: 0.82rem; color: var(--text-light); padding: 0.4rem 0 0.85rem; }
+
+  /* PRODUCT GRID */
+  .products-section { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+  /* PRODUCT TILE */
+  .product-tile { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; }
+  .product-tile:hover { box-shadow: var(--shadow-hover); transform: translateY(-4px); border-color: var(--green-soft); }
+  .product-tile.hidden { display: none; }
+  .tile-header { padding: 1.5rem 1.5rem 1rem; position: relative; }
+  .tile-icon-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+  .tile-icon { width: 50px; height: 50px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .tile-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; }
+  .tile-badge { font-size: 0.68rem; font-weight: 700; padding: 0.22rem 0.65rem; border-radius: 50px; letter-spacing: 0.03em; }
+  .badge-sg { background: #E3F2FD; color: #1565C0; }
+  .badge-ph { background: #FFF3E0; color: #E65100; }
+  .badge-featured { background: var(--green-pale); color: var(--green-dark); }
+  .badge-new { background: #F3E5F5; color: #6A1B9A; }
+  .tile-title { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; line-height: 1.3; }
+  .tile-type { font-size: 0.75rem; font-weight: 600; color: var(--green-main); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+  .tile-desc { font-size: 0.855rem; color: var(--text-mid); line-height: 1.65; }
+  .tile-divider { height: 1px; background: var(--bg-light); margin: 0 1.5rem; }
+  .tile-footer { padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .tile-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tile-tag { font-size: 0.7rem; font-weight: 600; background: var(--bg-light); color: var(--text-mid); padding: 0.2rem 0.55rem; border-radius: 5px; }
+  .tile-cta { font-size: 0.82rem; font-weight: 700; color: var(--green-main); display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; white-space: nowrap; }
+  .tile-cta-arrow { transition: transform 0.2s; }
+  .product-tile:hover .tile-cta-arrow { transform: translateX(3px); }
+
+  /* NO RESULTS */
+  .no-results { text-align: center; padding: 4rem 2rem; display: none; }
+  .no-results-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .no-results h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .no-results p { color: var(--text-mid); font-size: 0.9rem; }
+
+  /* MODAL OVERLAY */
+  .modal-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(10,30,15,0.6); backdrop-filter: blur(4px); display: none; align-items: flex-start; justify-content: center; padding: 1.5rem; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: white; border-radius: var(--radius-lg); max-width: 900px; width: 100%; margin: auto; overflow: hidden; animation: modalIn 0.28s cubic-bezier(0.34,1.3,0.64,1); }
+  @keyframes modalIn { from { opacity:0; transform: scale(0.94) translateY(20px); } to { opacity:1; transform: scale(1) translateY(0); } }
+
+  .modal-hero { background: linear-gradient(135deg, #0A2E0F, #2E7D32); color: white; padding: 2.5rem 2.5rem 2rem; position: relative; }
+  .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; width: 34px; height: 34px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; color: white; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .modal-close:hover { background: rgba(255,255,255,0.28); }
+  .modal-hero-top { display: flex; align-items: flex-start; gap: 1.25rem; margin-bottom: 1rem; }
+  .modal-icon { width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+  .modal-hero h2 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.35rem; }
+  .modal-hero .modal-type { font-size: 0.8rem; opacity: 0.75; font-weight: 500; }
+  .modal-hero-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .modal-hero-badge { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.72rem; font-weight: 700; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); }
+
+  .modal-body { display: grid; grid-template-columns: 1fr 280px; }
+  .modal-main { padding: 2rem 2rem 2rem 2.5rem; overflow-y: auto; max-height: 70vh; border-right: 1px solid var(--border); }
+  .modal-sidebar { padding: 2rem 1.5rem; background: var(--bg-light); }
+
+  .modal-section { margin-bottom: 2rem; }
+  .modal-section h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.9rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--green-pale); display: flex; align-items: center; gap: 0.5rem; }
+  .modal-section p { font-size: 0.875rem; color: var(--text-mid); line-height: 1.75; margin-bottom: 0.5rem; }
+  .benefit-list { list-style: none; }
+  .benefit-list li { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.55rem 0; border-bottom: 1px solid var(--bg-light); font-size: 0.865rem; color: var(--text-mid); }
+  .benefit-list li:last-child { border-bottom: none; }
+  .bcheck { color: var(--green-main); font-weight: 700; flex-shrink: 0; font-size: 0.9rem; margin-top: 0.05rem; }
+  .bcheck.red { color: #E53935; }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.845rem; }
+  .data-table th { background: var(--green-pale); color: var(--green-dark); padding: 0.65rem 0.9rem; text-align: left; font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .data-table td { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--bg-light); color: var(--text-mid); vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { font-weight: 600; color: var(--text-dark); width: 45%; }
+
+  .sidebar-kpi { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+  .sidebar-kpi h4 { font-size: 0.78rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+  .kpi-item { margin-bottom: 0.75rem; }
+  .kpi-item:last-child { margin-bottom: 0; }
+  .kpi-label { font-size: 0.72rem; color: var(--text-light); font-weight: 600; }
+  .kpi-value { font-size: 0.95rem; font-weight: 700; color: var(--green-dark); margin-top: 0.1rem; }
+  .btn-modal-primary { width: 100%; padding: 0.8rem; background: var(--green-main); color: white; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; margin-bottom: 0.6rem; transition: background 0.2s; }
+  .btn-modal-primary:hover { background: var(--green-dark); }
+  .btn-modal-ghost { width: 100%; padding: 0.8rem; background: transparent; color: var(--green-main); border: 1.5px solid var(--green-main); border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-modal-ghost:hover { background: var(--green-pale); }
+  .disclaimer { font-size: 0.72rem; color: var(--text-light); margin-top: 1rem; line-height: 1.55; }
+
+  /* FOOTER */
+  .footer { background: #0A2E0F; color: rgba(255,255,255,0.8); padding: 3rem 2rem 1.5rem; }
+  .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-brand { display: flex; align-items: center; gap: 0.75rem; }
+  .footer-reg { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .freg-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; font-size: 0.75rem; opacity: 0.45; }
+
+  /* UTILITY */
+  @media (max-width: 768px) {
+    .modal-body { grid-template-columns: 1fr; }
+    .modal-sidebar { border-top: 1px solid var(--border); }
+    .modal-main { max-height: none; border-right: none; }
+    .nav-links { display: none; }
+    .hero-counters { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="window.location='index.html'">
+      <svg width="150" height="40" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#4CAF50"/>
+        <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#1B5E20"/>
+        <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="white"/>
+        <text x="42" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="800" fill="#1B5E20">AZ</text>
+        <text x="70" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="400" fill="#2E7D32"> Insurance</text>
+      </svg>
+    </div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="window.location='index.html'">Home</span>
+      <span class="nav-link active">Products</span>
+      <span class="nav-link"><a href="claims.html">Claims</a></span>
+      <span class="nav-link"><a href="about.html">About Us</a></span>
+      <span class="nav-link"><a href="faq.html">FAQs</a></span>
+      <span class="nav-link"><a href="contact.html">Contact</a></span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-nav-ghost">Log In</button>
+      <button class="btn-nav-primary">Get a Quote</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">🛡️ Singapore &amp; Philippines</div>
+    <h1>Our Complete<br><span>Product Portfolio</span></h1>
+    <p>From life protection to wealth investment — explore all 20 AZ Insurance products across Singapore and the Philippines, tailored for every life stage.</p>
+    <div class="hero-counters">
+      <div class="hero-counter"><div class="hero-counter-num">20</div><div class="hero-counter-label">Products</div></div>
+      <div class="hero-counter"><div class="hero-counter-num">2</div><div class="hero-counter-label">Jurisdictions</div></div>
+      <div class="hero-counter"><div class="hero-counter-num">8</div><div class="hero-counter-label">Categories</div></div>
+      <div class="hero-counter"><div class="hero-counter-num">500K+</div><div class="hero-counter-label">Policyholders</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <div class="filters-inner">
+    <div class="filters-top">
+      <div class="search-box">
+        <svg width="16" height="16" fill="none" stroke="#8A8AAA" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search products…" oninput="applyFilters()">
+      </div>
+      <div class="jurisdiction-toggle">
+        <button class="jur-btn active" data-jur="all" onclick="setJur('all')">All</button>
+        <button class="jur-btn" data-jur="sg" onclick="setJur('sg')">🇸🇬 Singapore</button>
+        <button class="jur-btn" data-jur="ph" onclick="setJur('ph')">🇵🇭 Philippines</button>
+      </div>
+    </div>
+    <div class="category-tabs" id="catTabs">
+      <button class="cat-tab active" data-cat="all" onclick="setCat('all')">All Products (20)</button>
+      <button class="cat-tab" data-cat="life" onclick="setCat('life')">🛡️ Life &amp; Protection</button>
+      <button class="cat-tab" data-cat="health" onclick="setCat('health')">❤️ Health &amp; Medical</button>
+      <button class="cat-tab" data-cat="motor" onclick="setCat('motor')">🚗 Motor &amp; Travel</button>
+      <button class="cat-tab" data-cat="savings" onclick="setCat('savings')">💰 Savings &amp; Endowment</button>
+      <button class="cat-tab" data-cat="education" onclick="setCat('education')">🎓 Education</button>
+      <button class="cat-tab" data-cat="investment" onclick="setCat('investment')">📈 Investment &amp; Wealth</button>
+      <button class="cat-tab" data-cat="home" onclick="setCat('home')">🏠 Home</button>
+    </div>
+    <div class="results-count" id="resultsCount">Showing 20 products</div>
+  </div>
+</div>
+
+<!-- PRODUCTS GRID -->
+<div class="products-section">
+  <div class="product-grid" id="productGrid">
+
+    <!-- 1. AZ Legacy Life Assurance -->
+    <div class="product-tile" data-cat="life" data-jur="sg" data-id="legacy-life" onclick="openModal('legacy-life')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8F5E9">🛡️</div>
+          <div class="tile-badges">
+            <span class="tile-badge badge-sg">🇸🇬 Singapore</span>
+            <span class="tile-badge badge-featured">Most Popular</span>
+          </div>
+        </div>
+        <div class="tile-type">Whole Life Insurance</div>
+        <div class="tile-title">AZ Legacy Life Assurance</div>
+        <div class="tile-desc">Traditional whole life participating insurance with guaranteed lifetime protection, reversionary bonuses, and long-term cash value accumulation.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Whole Life</span><span class="tile-tag">Participating</span><span class="tile-tag">TPD</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 2. AZ Shield Term Essential -->
+    <div class="product-tile" data-cat="life" data-jur="sg" data-id="shield-term" onclick="openModal('shield-term')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8F5E9">⏱️</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span></div>
+        </div>
+        <div class="tile-type">Pure Term Life Insurance</div>
+        <div class="tile-title">AZ Shield Term Essential</div>
+        <div class="tile-desc">High-value term life protection at competitive rates. No cash value — every dollar funds pure death and disability coverage up to SGD 500K+ sum assured.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Term Life</span><span class="tile-tag">Renewable</span><span class="tile-tag">TPD Rider</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 3. AZ Active Armor Personal Accident -->
+    <div class="product-tile" data-cat="life" data-jur="sg" data-id="active-armor" onclick="openModal('active-armor')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FFF3E0">🦺</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span></div>
+        </div>
+        <div class="tile-type">Personal Accident Insurance</div>
+        <div class="tile-title">AZ Active Armor Personal Accident</div>
+        <div class="tile-desc">24-hour worldwide accident coverage including accidental death, dismemberment, medical reimbursement, and infectious disease extension including Dengue.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">PA Cover</span><span class="tile-tag">Worldwide</span><span class="tile-tag">Dengue</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 4. AZ Corporate Care Pro -->
+    <div class="product-tile" data-cat="health" data-jur="sg" data-id="corporate-care" onclick="openModal('corporate-care')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8F5E9">🏢</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span><span class="tile-badge" style="background:#E3F2FD;color:#1565C0;">B2B</span></div>
+        </div>
+        <div class="tile-type">Group Medical Insurance</div>
+        <div class="tile-title">AZ Corporate Care Pro</div>
+        <div class="tile-desc">Institutional group health insurance for corporates — covering hospitalisation, surgical, GP, and specialist care via 500+ panel clinics across Singapore.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Group Plan</span><span class="tile-tag">Cashless</span><span class="tile-tag">5+ Staff</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 5. AZ Auto Drive Comprehensive -->
+    <div class="product-tile" data-cat="motor" data-jur="sg" data-id="auto-drive" onclick="openModal('auto-drive')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E3F2FD">🚗</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span></div>
+        </div>
+        <div class="tile-type">Comprehensive Motor Insurance</div>
+        <div class="tile-title">AZ Auto Drive Comprehensive</div>
+        <div class="tile-desc">Full-spectrum private car insurance exceeding LTA requirements — own damage, third-party liability up to SGD 5M, NCD up to 50%, and 24/7 roadside assist.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Comprehensive</span><span class="tile-tag">NCD 50%</span><span class="tile-tag">LTA Compliant</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 6. AZ Golden Years Retirement Income -->
+    <div class="product-tile" data-cat="savings" data-jur="sg" data-id="golden-years" onclick="openModal('golden-years')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FFF8E1">🌟</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span></div>
+        </div>
+        <div class="tile-type">Participating Retirement Endowment</div>
+        <div class="tile-title">AZ Golden Years Retirement Income</div>
+        <div class="tile-desc">Build a guaranteed monthly retirement income stream. Structured payout from age 55, 60, 65, or 70 for 10/20 years or lifetime, with non-guaranteed cash bonuses.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Retirement</span><span class="tile-tag">Monthly Income</span><span class="tile-tag">Participating</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 7. AZ Horizon Wealth Capital Plus -->
+    <div class="product-tile" data-cat="investment" data-jur="sg" data-id="horizon-wealth" onclick="openModal('horizon-wealth')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#F3E5F5">💎</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span></div>
+        </div>
+        <div class="tile-type">Single Premium Investment-Linked VUL</div>
+        <div class="tile-title">AZ Horizon Wealth Capital Plus</div>
+        <div class="tile-desc">Deploy a lump sum into institutional sub-funds (Global Tech or Income Bond) while maintaining core life protection. Min. SGD 50,000 single premium.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Single Premium</span><span class="tile-tag">VUL</span><span class="tile-tag">Fund Switch</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 8. AZ Pinnacle Universal Sovereign -->
+    <div class="product-tile" data-cat="investment" data-jur="sg" data-id="pinnacle" onclick="openModal('pinnacle')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FFF8E1">👑</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span><span class="tile-badge" style="background:#FFF3E0;color:#BF360C;">HNW</span></div>
+        </div>
+        <div class="tile-type">HNW Universal Life Insurance (USD)</div>
+        <div class="tile-title">AZ Pinnacle Universal Sovereign</div>
+        <div class="tile-desc">Elite universal life for high-net-worth clients. Min. USD 1M face value, 4.25% crediting rate, 2% guaranteed floor, and premium financing via private banks.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">USD Denominated</span><span class="tile-tag">Estate Planning</span><span class="tile-tag">Private Banking</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 9. AZ Institutional Income Bond Master -->
+    <div class="product-tile" data-cat="investment" data-jur="sg" data-id="inst-bond" onclick="openModal('inst-bond')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8F5E9">📊</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span><span class="tile-badge" style="background:#E3F2FD;color:#1565C0;">Wholesale</span></div>
+        </div>
+        <div class="tile-type">Fixed Income Mutual Fund</div>
+        <div class="tile-title">AZ Institutional Income Bond Master</div>
+        <div class="tile-desc">Wholesale fixed income fund deploying capital into Asia-Pacific sovereign bonds and corporate credit. Min. SGD 25,000 initial investment. T+2 redemption.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Fixed Income</span><span class="tile-tag">Sovereign Bonds</span><span class="tile-tag">Monthly Income</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 10. AZ Pioneer Global Asset Navigator -->
+    <div class="product-tile" data-cat="investment" data-jur="sg" data-id="pioneer" onclick="openModal('pioneer')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E3F2FD">🌐</div>
+          <div class="tile-badges"><span class="tile-badge badge-sg">🇸🇬 Singapore</span></div>
+        </div>
+        <div class="tile-type">Retail Multi-Asset Investment Account</div>
+        <div class="tile-title">AZ Pioneer Global Asset Navigator</div>
+        <div class="tile-desc">Retail investment account across Defensive, Growth, or ESG fund portfolios. No insurance component. Min. SGD 10,000 with SGD 500/month top-up option.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Multi-Asset</span><span class="tile-tag">ESG Option</span><span class="tile-tag">Digital</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 11. AZ Cancer Shield Care -->
+    <div class="product-tile" data-cat="health" data-jur="ph" data-id="cancer-shield" onclick="openModal('cancer-shield')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FCE4EC">🩺</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Specialized Cancer Insurance</div>
+        <div class="tile-title">AZ Cancer Shield Care</div>
+        <div class="tile-desc">Focused financial protection against cancer — lump-sum payouts at early and major stages, plus PHP 15,000/month cash allowance for chemo/radiation for up to 12 months.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Cancer</span><span class="tile-tag">Treatment Allowance</span><span class="tile-tag">PHP</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 12. AZ Fit and Well Protect -->
+    <div class="product-tile" data-cat="health" data-jur="ph" data-id="fit-well" onclick="openModal('fit-well')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8F5E9">❤️‍🩹</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Critical Illness Insurance</div>
+        <div class="tile-title">AZ Fit and Well Protect</div>
+        <div class="tile-desc">Covers 100 major and minor critical illnesses. Lump-sum payout on diagnosis. Includes a Healthy Living Cash Back of 100% of premiums if no CI claim by maturity.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">100 Conditions</span><span class="tile-tag">CI Cover</span><span class="tile-tag">Cash Back</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 13. AZ Future Scholars Builder -->
+    <div class="product-tile" data-cat="education" data-jur="ph" data-id="scholars" onclick="openModal('scholars')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8EAF6">🎓</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Education VUL Plan</div>
+        <div class="tile-title">AZ Future Scholars Builder</div>
+        <div class="tile-desc">Fund your child's college education through investment-linked savings. Parent's premiums waived on death or disability — education payout continues uninterrupted.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Education</span><span class="tile-tag">VUL</span><span class="tile-tag">Premium Waiver</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 14. AZ Global Assure Travel -->
+    <div class="product-tile" data-cat="motor" data-jur="ph" data-id="global-travel" onclick="openModal('global-travel')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E3F2FD">✈️</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">International Travel Insurance</div>
+        <div class="tile-title">AZ Global Assure Travel</div>
+        <div class="tile-desc">Schengen-compliant travel insurance for Filipino travelers. Emergency medical up to PHP 2.5M, trip cancellation PHP 150K, baggage loss, and flight delay cash.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Schengen</span><span class="tile-tag">190 Countries</span><span class="tile-tag">Evacuation</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 15. AZ Home Fortress Secure -->
+    <div class="product-tile" data-cat="home" data-jur="ph" data-id="home-fortress" onclick="openModal('home-fortress')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FFF8E1">🏠</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Residential Property Insurance</div>
+        <div class="tile-title">AZ Home Fortress Secure</div>
+        <div class="tile-desc">Comprehensive home protection against fire, lightning, typhoons, earthquakes, floods, and burglary. Contents cover up to PHP 500K plus PHP 100K household liability.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Fire & Typhoon</span><span class="tile-tag">Contents</span><span class="tile-tag">Earthquake</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 16. AZ Peso Harvest 10-5 -->
+    <div class="product-tile" data-cat="savings" data-jur="ph" data-id="peso-harvest" onclick="openModal('peso-harvest')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E8F5E9">🌾</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Guaranteed Savings Endowment</div>
+        <div class="tile-title">AZ Peso Harvest 10-5</div>
+        <div class="tile-desc">5-year premium, 10-year policy. Receive 8% of sum assured annually from Year 5–9, then 100% lump sum at Year 10. All payouts fully guaranteed at inception.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Guaranteed</span><span class="tile-tag">Annual Payouts</span><span class="tile-tag">No Market Risk</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 17. AZ Metrobank Legacy Saver 15-7 -->
+    <div class="product-tile" data-cat="savings" data-jur="ph" data-id="metrobank-saver" onclick="openModal('metrobank-saver')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FFF3E0">🏦</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span><span class="tile-badge" style="background:#E8F5E9;color:#2E7D32;">Bancassurance</span></div>
+        </div>
+        <div class="tile-type">Bancassurance Endowment (Metrobank)</div>
+        <div class="tile-title">AZ Metrobank Legacy Saver 15-7</div>
+        <div class="tile-desc">7-year pay, 15-year policy via Metrobank branches. Biennial cash payouts of 10% of sum assured from Year 8, 200% death benefit, and guaranteed maturity lump sum.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Bancassurance</span><span class="tile-tag">Biennial Payouts</span><span class="tile-tag">200% Death Benefit</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 18. AZ BPI Bancassurance Secure Wealth -->
+    <div class="product-tile" data-cat="savings" data-jur="ph" data-id="bpi-banc" onclick="openModal('bpi-banc')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#E3F2FD">🏛️</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span><span class="tile-badge" style="background:#E8F5E9;color:#2E7D32;">Bancassurance</span></div>
+        </div>
+        <div class="tile-type">Single Premium Bancassurance (BPI)</div>
+        <div class="tile-title">AZ BPI Bancassurance Secure Wealth</div>
+        <div class="tile-desc">One-time investment via BPI. Earn 4% guaranteed annual cash payout for 4 years, get 100% capital back at Year 5. Death benefit 125–200% of principal.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Single Premium</span><span class="tile-tag">4% Annual Yield</span><span class="tile-tag">Capital Guaranteed</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 19. AZ Maxilink Prime -->
+    <div class="product-tile" data-cat="investment" data-jur="ph" data-id="maxilink" onclick="openModal('maxilink')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#F3E5F5">📈</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Variable Universal Life Insurance (VUL)</div>
+        <div class="tile-title">AZ Maxilink Prime</div>
+        <div class="tile-desc">Regular premium VUL with 3 fund choices (Equity, Balanced, Fixed Income). Loyalty bonuses from Year 10. Premium holiday allowed after 3 years. Min. PHP 30K/year.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">VUL</span><span class="tile-tag">3 Funds</span><span class="tile-tag">Loyalty Bonus</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <!-- 20. AZ Prosperity Fund Accumulator -->
+    <div class="product-tile" data-cat="investment" data-jur="ph" data-id="prosperity" onclick="openModal('prosperity')">
+      <div class="tile-header">
+        <div class="tile-icon-row">
+          <div class="tile-icon" style="background:#FFF8E1">💰</div>
+          <div class="tile-badges"><span class="tile-badge badge-ph">🇵🇭 Philippines</span></div>
+        </div>
+        <div class="tile-type">Standalone Mutual Fund</div>
+        <div class="tile-title">AZ Prosperity Fund Accumulator</div>
+        <div class="tile-desc">Pure retail mutual fund (no insurance) across Equity, Balanced, or Money Market options. Min. PHP 5,000 initial. Auto investment plan available. SEC regulated.</div>
+      </div>
+      <div class="tile-divider"></div>
+      <div class="tile-footer">
+        <div class="tile-tags"><span class="tile-tag">Mutual Fund</span><span class="tile-tag">No Insurance</span><span class="tile-tag">SEC Philippines</span></div>
+        <div class="tile-cta">Details <span class="tile-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+  </div><!-- end product-grid -->
+  <div class="no-results" id="noResults">
+    <div class="no-results-icon">🔍</div>
+    <h3>No products found</h3>
+    <p>Try adjusting your search or filter criteria.</p>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-hero" id="modalHero">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-hero-top">
+        <div class="modal-icon" id="modalIcon">🛡️</div>
+        <div>
+          <h2 id="modalTitle"></h2>
+          <div class="modal-type" id="modalType"></div>
+        </div>
+      </div>
+      <div class="modal-hero-badges" id="modalBadges"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-main" id="modalMain"></div>
+      <div class="modal-sidebar" id="modalSidebar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <svg width="130" height="34" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#69F0AE"/>
+          <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#A5D6A7"/>
+          <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="#0A2E0F"/>
+          <text x="42" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="800" fill="white">AZ</text>
+          <text x="70" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="400" fill="rgba(255,255,255,0.8)"> Insurance</text>
+        </svg>
+      </div>
+      <div class="footer-reg">
+        <span class="freg-badge">MAS Licensed SG</span>
+        <span class="freg-badge">IC Certified PH</span>
+        <span class="freg-badge">BSP Registered</span>
+        <span class="freg-badge">SEC Philippines</span>
+        <span class="freg-badge">Fitch Rated AA</span>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 AZ Insurance Ltd. (Singapore UEN: 199812345A) & AZ Insurance Philippines Inc. (SEC Reg. AS094-12345). All rights reserved. This is a demonstration site with fictitious product data.</div>
+  </div>
+</footer>
+
+<script>
+// ──── PRODUCT DATA ────────────────────────────────────────────────
+const products = {
+  'legacy-life': {
+    icon:'🛡️', title:'AZ Legacy Life Assurance', type:'Traditional Whole Life Insurance – Participating',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD'],
+    overview:'AZ Legacy Life Assurance provides guaranteed lifetime financial protection combined with long-term capital growth via non-guaranteed bonuses. Premiums are pooled into the AZ Singapore Participating Fund, conservatively managed in fixed-income and equities. Cash value builds from Year 2, supplemented by reversionary and terminal bonuses declared annually.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','15 Days'],['Max. Entry Age','65 Years (Nearest Birthday)'],['Policy Maturity','Lifetime – up to Age 99'],['Min. Sum Assured','SGD 100,000'],['Max. Sum Assured','Subject to Underwriting'],['Base Currency','SGD']],
+    benefits:[{c:true,t:'Death Benefit: Guaranteed Sum Assured + Accumulated Reversionary Bonuses + Terminal Bonus, less outstanding loans'},{c:true,t:'TPD Benefit: 100% of Death Benefit if TPD certified before Age 65 policy anniversary'},{c:true,t:'Reversionary Bonus: Non-guaranteed annual addition; once declared, cannot be revoked'},{c:true,t:'Terminal Bonus: One-time non-guaranteed bonus paid at death, maturity, or full surrender'},{c:true,t:'Cash Value accumulation from end of Policy Year 2'}],
+    premium:[['Payment Terms','10 / 15 / 20 Years, or Pay to Age 65'],['Payment Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','GIRO, PayNow, Major Credit Cards'],['Grace Period','31 days'],['APL Feature','Automatic Premium Loan against cash value after grace period']],
+    fees:[['Fund Management Fee','1.00% p.a. (integrated into participating fund)'],['Surrender Penalty','Reduced cash value matrix – first 10 policy years'],['Document Reference','AZ-WL-SG-2026-V1']],
+    kpis:[{l:'Min. Sum Assured',v:'SGD 100,000'},{l:'Entry Age',v:'15 days – 65 yrs'},{l:'Coverage',v:'To Age 99'},{l:'Fund Mgmt Fee',v:'1.00% p.a.'}]
+  },
+  'shield-term': {
+    icon:'⏱️', title:'AZ Shield Term Essential', type:'Pure Term Life Insurance – Non-Participating',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD'],
+    overview:'A pure, non-participating term life policy providing high-value death and disability cover at competitive premiums. No cash value or bonuses — every dollar funds protection. Ideal for mortgage cover, income replacement, or corporate key-person insurance. Available in 5-year renewable or fixed-level term structures.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','16 Years'],['Max. Entry Age','65 Years (Nearest Birthday)'],['Policy Expiry','Up to Age 75 or fixed term 5–40 years'],['Min. Sum Assured','SGD 500,000'],['Base Currency','SGD']],
+    benefits:[{c:true,t:'Death Benefit: 100% of Sum Assured to beneficiaries on death by any cause'},{c:true,t:'Terminal Illness Benefit: 100% Sum Assured accelerated on terminal diagnosis (life expectancy < 12 months)'},{c:true,t:'TPD Rider (optional): Full Sum Assured on Total and Permanent Disability before Age 65'},{c:true,t:'5-Year Renewable: Auto-renews without medical re-evidence up to Age 75'},{c:false,t:'No cash surrender value at any time'}],
+    premium:[['Premium Types','5-Year Auto-Renewable or Fixed Level Term'],['Payment Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','GIRO, PayNow, Online Banking'],['Grace Period','31 days'],['Renewability','Automatic at attained age rates; no new medical evidence required']],
+    fees:[['Policy Fee','SGD 5.00/month (in premium)'],['Surrender Value','Zero SGD – no refund on cancellation'],['Document Reference','AZ-TL-SG-2026-V1']],
+    kpis:[{l:'Min. Sum Assured',v:'SGD 500,000'},{l:'Entry Age',v:'16 – 65 yrs'},{l:'Max. Coverage',v:'To Age 75'},{l:'Cash Value',v:'None'}]
+  },
+  'active-armor': {
+    icon:'🦺', title:'AZ Active Armor Personal Accident', type:'General Insurance – Personal Accident Policy',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD','24/7 Worldwide'],
+    overview:'AZ Active Armor offers 24-hour worldwide financial coverage against accidental death, bodily injury, and medical expenses. It includes specialized cover for sports injuries, 20 infectious diseases (including Dengue), and mobility modifications after severe accidents — ideal for active individuals, manual professionals, and outdoor workers.',
+    eligibility:[['Min. Entry Age','18 Years'],['Max. Entry Age','65 Years'],['Renewable Max. Age','75 Years (Nearest Birthday)'],['Policy Duration','12 Months – Annual Renewal'],['Risk Class 1','Indoor / Desk Professionals'],['Risk Class 2','Outdoor / Supervisory Staff'],['Risk Class 3','Manual Workers – Light Machinery']],
+    benefits:[{c:true,t:'Accidental Death: 100% of Sum Assured (up to SGD 500,000); doubles on public transport or commercial aircraft'},{c:true,t:'Permanent Dismemberment: Scaled 5%–100% payout per Standard Disability Schedule'},{c:true,t:'Medical Reimbursement: Up to SGD 5,000/accident including TCM up to SGD 500 sub-limit'},{c:true,t:'Infectious Disease Extension: Hospitalisation for 20 conditions including Dengue, HFMD, Zika'},{c:true,t:'Zero deductible on all injury claims'}],
+    premium:[['Payment Modes','Monthly or Annual'],['Channels','PayNow, Credit Card, GIRO'],['Grace Period','15 days (monthly cycle)'],['Premium Basis','Occupation risk class – no medical history required']],
+    fees:[['Policy Deductible','Zero SGD for all injury claims'],['Major Exclusions','Self-harm, military combat, professional motorsports, alcohol/narcotics incidents'],['Document Reference','AZ-PA-SG-2026-V1']],
+    kpis:[{l:'Max. Death Benefit',v:'SGD 500,000'},{l:'Medical Reimbursement',v:'SGD 5,000/accident'},{l:'Coverage',v:'24/7 Worldwide'},{l:'Deductible',v:'Zero SGD'}]
+  },
+  'corporate-care': {
+    icon:'🏢', title:'AZ Corporate Care Pro', type:'Group Medical & Hospitalisation Insurance',
+    badges:['🇸🇬 Singapore','MOM Compliant','B2B Group Plan'],
+    overview:'Institutional group health insurance for Singapore corporates. Provides cashless medical benefits via 500+ panel clinics, covering hospitalisation, surgery, GP visits, and specialist care. Issued to the employer to satisfy statutory MOM employee benefit guidelines. Suitable for companies with 5+ employees.',
+    eligibility:[['Min. Company Size','5 Full-Time Employees'],['Employee Entry Age','16 – 65 Years'],['Max. Renewable Age','70 Years'],['Coverage Scope','Singapore Inpatient or Worldwide Emergency Extension'],['Policy Duration','12 Months – Annual Renewal']],
+    benefits:[{c:true,t:'Inpatient Hospitalisation: Up to SGD 50,000 (standard) / SGD 250,000 (executive tier) in restructured hospitals'},{c:true,t:'GP Outpatient: Full coverage at 500+ AZ panel clinics; SGD 5 co-payment per visit by employee'},{c:true,t:'Specialist Outpatient: Up to SGD 5,000/year; referral from panel GP required'},{c:true,t:'Cashless Claim Processing: Digital corporate cards for zero out-of-pocket employee claims'}],
+    premium:[['Premium Basis','Per-head annual rate by industry risk tier and age profile'],['Payment','Annual full payment or quarterly company installments'],['Channels','Corporate Bank Transfer, Interbank GIRO'],['Renewal','Guaranteed renewable for groups over 50 lives; pricing adjusts on claims experience']],
+    fees:[['Premium Adjustments','Annual based on 9-month aggregate claims loss ratio'],['Document Reference','AZ-GRP-SG-2026-V1']],
+    kpis:[{l:'Min. Employees',v:'5 Staff'},{l:'Max. Hospitalisation',v:'SGD 250,000 (Exec)'},{l:'Panel Clinics',v:'500+ Singapore'},{l:'GP Co-Pay',v:'SGD 5/visit'}]
+  },
+  'auto-drive': {
+    icon:'🚗', title:'AZ Auto Drive Comprehensive', type:'Comprehensive Motor Vehicle Insurance – General Insurance',
+    badges:['🇸🇬 Singapore','LTA Compliant','SGD'],
+    overview:'Full-spectrum motor insurance for private vehicles exceeding LTA statutory requirements. Covers own damage from accidents, fire, theft, and flood; unlimited third-party bodily injury; and property damage up to SGD 5M. NCD rewards up to 50% premium discount for claim-free drivers.',
+    eligibility:[['Min. Policyholder Age','21 Years'],['Max. Age at Inception','70 Years'],['Driver Licence','Valid Class 3/3A – min. 1 year experience'],['Vehicle Eligibility','Private passenger cars under 10 years old; non-commercial use'],['Policy Duration','12 Months – Annual Renewal']],
+    benefits:[{c:true,t:'Own Damage: Repairs or fair market replacement for collisions, vandalism, fire, flood, windstorm'},{c:true,t:'Third-Party Liability: Unlimited bodily injury/death; property damage up to SGD 5,000,000'},{c:true,t:'Medical & PA Allowance: SGD 500 medical + SGD 50,000 PA for driver (accidental death / loss of sight/limbs)'},{c:true,t:'NCD Protection: Up to 50% discount after 5+ claim-free years'},{c:false,t:'Own damage repairs must use AZ Authorized Workshops (unless Any Workshop rider purchased)'}],
+    premium:[['NCD Scale','10% (1yr) → 20% → 30% → 40% → 50% (5+yrs)'],['Payment','Annual or monthly interest-free via partner credit cards'],['Channels','PayNow, Credit Card, AXS Portal'],['Standard Excess','SGD 600/claim for own damage'],['Young Driver Excess','Additional SGD 500 for drivers under 25 or < 2 years experience']],
+    fees:[['Standard Excess','SGD 600 per own damage claim'],['Young Driver Surcharge','Additional SGD 500 excess'],['Document Reference','AZ-MOT-SG-2026-V1']],
+    kpis:[{l:'3rd Party Property',v:'Up to SGD 5M'},{l:'Max. NCD Discount',v:'50%'},{l:'PA Benefit (Driver)',v:'SGD 50,000'},{l:'Standard Excess',v:'SGD 600'}]
+  },
+  'golden-years': {
+    icon:'🌟', title:'AZ Golden Years Retirement Income', type:'Participating Retirement Endowment – Traditional',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD'],
+    overview:'A structured participating endowment plan delivering guaranteed monthly retirement income from your chosen retirement age. Savings accumulate in the AZ Wealth Endowment Fund; at retirement, you receive a fixed guaranteed monthly payout plus non-guaranteed monthly cash bonuses. Optional cash accumulation at 3.25% p.a. instead of direct payouts.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','1 Year'],['Max. Entry Age','55 Years (Nearest Birthday)'],['Retirement Payout Age','55 / 60 / 65 / 70'],['Payout Horizon','10 Years, 20 Years, or Lifetime'],['Min. Monthly Income','SGD 500/month'],['Base Currency','SGD']],
+    benefits:[{c:true,t:'Guaranteed Monthly Income: Fixed contractual amount locked at inception; immune to market changes'},{c:true,t:'Non-Guaranteed Monthly Bonus: Additional income from participating fund performance; declared annually'},{c:true,t:'Cash Accumulation Option: Leave payouts to compound at 3.25% p.a. with AZ Insurance'},{c:true,t:'Death/Terminal Illness Benefit during savings phase: 105% of total premiums paid + reversionary bonuses'}],
+    premium:[['Premium Terms','Single Premium, 5yr, 10yr, or continuous to 5 years before payout age'],['Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','GIRO, Credit Card, PayNow'],['Grace Period','31 days'],['Policy Fee','SGD 6.00/month (embedded in premium)']],
+    fees:[['Monthly Policy Fee','SGD 6.00 (in premium)'],['Early Surrender','Cash payout lower than total premiums; funds committed to long-term debt securities'],['Document Reference','AZ-END-SG-2026-V1']],
+    kpis:[{l:'Min. Monthly Income',v:'SGD 500'},{l:'Payout Age Options',v:'55 / 60 / 65 / 70'},{l:'Accumulation Rate',v:'3.25% p.a. option'},{l:'Max. Entry Age',v:'55 Years'}]
+  },
+  'horizon-wealth': {
+    icon:'💎', title:'AZ Horizon Wealth Capital Plus', type:'Single Premium Investment-Linked VUL (Variable Universal Life)',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD'],
+    overview:'Single-premium VUL designed for affluent clients deploying large capital into global institutional sub-funds while maintaining life protection. 100% of net capital (after 2% allocation fee) is converted to fund units on Day 1. Two fund options: AZ Global Technology Growth Fund (high-risk) and AZ Income Opportunity Bond Fund (low-risk). Partial withdrawals available anytime.',
+    eligibility:[['Policy Owner Min. Age','21 Years'],['Life Assured Min. Age','1 Year'],['Max. Entry Age','75 Years (Nearest Birthday)'],['Policy Expiry','Age 99 or Full Surrender'],['Min. Single Premium','SGD 50,000'],['Max. Single Premium','Subject to Financial Underwriting']],
+    benefits:[{c:true,t:'Capital Death Benefit: Higher of 125% of Single Premium or current Fund Account Value'},{c:true,t:'Terminal Illness Advance: Full fund value accelerated on terminal illness (< 12 months life expectancy)'},{c:true,t:'Fund Switching: Unlimited switches via My AZ Digital Portal at zero cost'},{c:true,t:'Ad-Hoc Top-Up: Min. SGD 5,000 per additional injection'},{c:false,t:'Surrender charge applies in Years 1–3 (3%, 2%, 1%); zero from Year 4 onward'}],
+    premium:[['Single Premium Allocation Fee','2.0% deducted upfront before unit purchase'],['Monthly Admin Fee','SGD 10 flat (via unit cancellation)'],['Fund Management Fee','1.10% p.a. of fund NAV (daily)'],['Surrender Charge','Yr 1: 3%, Yr 2: 2%, Yr 3: 1%, Yr 4+: 0%'],['Top-Up Min.','SGD 5,000 per transaction']],
+    fees:[['Allocation Fee','2.0% of single premium at inception'],['Admin Fee','SGD 10/month'],['Fund Mgmt Fee','1.10% p.a.'],['Document Reference','AZ-VUL2-SG-2026-V1']],
+    kpis:[{l:'Min. Single Premium',v:'SGD 50,000'},{l:'Death Benefit',v:'125% of premium or NAV'},{l:'Fund Mgmt Fee',v:'1.10% p.a.'},{l:'Surrender Free From',v:'Year 4'}]
+  },
+  'pinnacle': {
+    icon:'👑', title:'AZ Pinnacle Universal Sovereign', type:'HNW Single Premium Universal Life – USD / SGD',
+    badges:['🇸🇬 Singapore','MAS Compliant','USD Denominated','HNW / Private Banking'],
+    overview:'Elite universal life insurance for high-net-worth individuals focused on estate preservation, business succession, and leveraged premium financing. Features a current crediting rate of 4.25% p.a. on accumulated cash values with a guaranteed minimum floor of 2.00% p.a. Minimum USD 1M face value. Structured for private banking collateral assignments.',
+    eligibility:[['Policy Owner Min. Age','21 Years'],['Life Assured Min. Age','18 Years'],['Max. Entry Age','75 Years (Nearest Birthday)'],['Min. Face Sum Assured','USD 1,000,000'],['Min. Single Premium','USD 250,000'],['Medical Requirement','Comprehensive screening at AZ designated clinics'],['Base Currency','USD (SGD alternative available)']],
+    benefits:[{c:true,t:'Sovereign Death Benefit: Full face sum in USD to estate trustees/beneficiaries; unaffected by market volatility'},{c:true,t:'Current Crediting Rate: 4.25% p.a. (reviewed quarterly) on accumulated cash value'},{c:true,t:'Guaranteed Minimum Floor: 2.00% p.a. — cash value never declines during market crises'},{c:true,t:'Premium Financing: Policy assignable as bank collateral for up to 80% premium financing via Tier-1 private banks'},{c:true,t:'Surrender value builds from Year 1 on credited interest net of monthly admin fees'}],
+    premium:[['Front-End Expense Charge','4.0% of single premium at inception'],['Monthly Admin Charge','USD 50 flat on 1st of each month'],['Cost of Insurance','Monthly deduction based on net amount at risk and attained age'],['Surrender Penalty','15-year sliding scale; 0% from Year 16 onward']],
+    fees:[['Entry Charge','4.0% of single premium'],['Monthly Admin','USD 50'],['Surrender-Free From','Year 16 onwards'],['Document Reference','AZ-HNW-SG-2026-V1']],
+    kpis:[{l:'Min. Face Value',v:'USD 1,000,000'},{l:'Crediting Rate',v:'4.25% p.a.'},{l:'Min. Guaranteed Rate',v:'2.00% p.a.'},{l:'Premium Financing',v:'Up to 80%'}]
+  },
+  'inst-bond': {
+    icon:'📊', title:'AZ Institutional Income Bond Master', type:'Fixed Income Wholesale Mutual Fund (No Insurance)',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD / USD','Wholesale Investors'],
+    overview:'A wholesale fixed-income mutual fund deploying 100% of net capital into Asia-Pacific high-grade corporate bonds, sovereign debt securities, and infrastructure bonds. No life insurance component. Designed for institutional and accredited investors seeking consistent monthly/quarterly income and capital preservation. T+2 redemption settlement.',
+    eligibility:[['Min. Entry Age','18 Years (Individual)'],['Min. Initial Investment','SGD 25,000'],['Min. Subsequent Top-Up','SGD 5,000 per transaction'],['Redemption Settlement','T+2 Business Days'],['Distribution Options','Direct bank payout or Automatic Unit Reinvestment']],
+    benefits:[{c:true,t:'Asia-Pacific Sovereign Bond Segment: SG, AU, JP, ASEAN government securities – extremely low risk'},{c:true,t:'Corporate Credit Segment: Investment-grade bonds from SG/HK banks and real estate groups – moderate yield'},{c:true,t:'Monthly or Quarterly cash distribution directly to registered bank account'},{c:true,t:'Daily NAVPU pricing; redemption requests before 3:00 PM for same-day pricing'}],
+    premium:[['Front-End Sales Charge','0.75% of gross investment amount'],['Exit Redemption Charge','0.50% if redeemed within 90 days; 0% after 90 days'],['Total Expense Ratio','0.85% p.a. (calculated daily in NAVPU)'],['Account Setup Fee','Zero SGD']],
+    fees:[['Sales Charge','0.75% front-end'],['Redemption Charge','0.50% (< 90 days); Free after 90 days'],['TER','0.85% p.a.'],['Document Reference','AZ-FI-SG-2026-V1']],
+    kpis:[{l:'Min. Investment',v:'SGD 25,000'},{l:'Redemption',v:'T+2 Business Days'},{l:'Total Expense Ratio',v:'0.85% p.a.'},{l:'Front-End Charge',v:'0.75%'}]
+  },
+  'pioneer': {
+    icon:'🌐', title:'AZ Pioneer Global Asset Navigator', type:'Retail Multi-Asset Investment Account (No Insurance)',
+    badges:['🇸🇬 Singapore','MAS Compliant','SGD'],
+    overview:'Retail investment platform offering access to three diversified global model portfolios: Defensive (80% bonds), Growth (70% equities), and Visionary ESG (100% ESG global equities). Pure capital platform — no insurance component. Min. SGD 10,000 initial with SGD 500/month regular plan option. Quarterly auto-rebalancing at zero cost.',
+    eligibility:[['Min. Age','18 Years'],['Joint Accounts','Permitted (up to 2 parties)'],['Min. Initial Capital','SGD 10,000'],['Min. Monthly Regular','SGD 500 via regular savings plan'],['Redemption Settlement','T+4 Business Days (international transfers)']],
+    benefits:[{c:true,t:'Defensive Fund: 80% bonds, 15% dividend stocks, 5% cash – capital preservation focus'},{c:true,t:'Growth Fund: 70% international equities, 25% bonds, 5% commodities – long-term capital growth'},{c:true,t:'Visionary ESG Fund: 100% ESG-compliant global equities – clean energy & sustainable tech focus'},{c:true,t:'Quarterly automatic portfolio rebalancing at zero fee'},{c:false,t:'No life insurance protection – pure investment account'}],
+    premium:[['Platform Setup Fee','Zero SGD'],['Front-End Sales Charge','1.0% per deposit'],['Rebalancing Fee','Zero SGD (automatic quarterly)'],['Annual Mgmt Fee','1.20% (Defensive); 1.50% (Growth & ESG) – in daily unit NAV']],
+    fees:[['Sales Charge','1.0% per deposit'],['Mgmt Fee','1.20%–1.50% p.a.'],['Rebalancing','Free'],['Document Reference','AZ-INV-SG-2026-V1']],
+    kpis:[{l:'Min. Investment',v:'SGD 10,000'},{l:'Regular Plan From',v:'SGD 500/month'},{l:'Fund Options',v:'3 Portfolios'},{l:'Rebalancing Fee',v:'Zero'}]
+  },
+  'cancer-shield': {
+    icon:'🩺', title:'AZ Cancer Shield Care', type:'Specialized Cancer Health Insurance – Traditional',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP'],
+    overview:'Targeted financial protection exclusively against cancer-related costs. Provides staged cash payouts on early-stage and major-stage cancer diagnosis, plus a PHP 15,000/month treatment allowance for up to 12 months of chemotherapy or radiation. A 90-day waiting period and 14-day survival clause apply. Designed as an affordable standalone or rider supplement.',
+    eligibility:[['Policy Owner / Life Assured Min. Age','18 Years'],['Max. Entry Age','55 Years (Nearest Birthday)'],['Policy Maturity','Age 70 of Life Assured or Claim Exhaustion'],['Sum Assured Options','PHP 250,000 / PHP 500,000 / PHP 1,000,000']],
+    benefits:[{c:true,t:'Early Stage Cancer Payout: 25% of Face Sum on confirmed early-stage carcinoma-in-situ or early breast lesions'},{c:true,t:'Major Stage Cancer Payout: 100% of remaining Face Sum on advanced/invasive cancer (leukemia, lung, stomach tumors, etc.)'},{c:true,t:'Treatment Cash Allowance: PHP 15,000/month for up to 12 months of chemo/targeted therapy/radiation'},{c:false,t:'90-day waiting period from policy effective date; 14-day survival clause post-diagnosis'},{c:false,t:'Zero cash surrender value – pure protection policy'}],
+    premium:[['Payment Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','GCash, Maya, ShopeePay, Credit Cards'],['Grace Period','31 days'],['Waiting Period','90 days from inception; 14-day survival clause']],
+    fees:[['Cash Surrender Value','Zero PHP – pure risk policy'],['Document Reference','AZ-CAN-PH-2026-V1']],
+    kpis:[{l:'Max. Face Amount',v:'PHP 1,000,000'},{l:'Monthly Allowance',v:'PHP 15,000 × 12'},{l:'Waiting Period',v:'90 Days'},{l:'Entry Age',v:'18 – 55 Years'}]
+  },
+  'fit-well': {
+    icon:'❤️‍🩹', title:'AZ Fit and Well Protect', type:'Critical Illness Insurance – Traditional Non-Participating',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP','100 Conditions'],
+    overview:'Comprehensive critical illness insurance covering 100 major and minor medical conditions with fixed, guaranteed premiums that never increase with age post-issuance. Lump-sum payout on diagnosis enables immediate access to premium treatments. Includes a Healthy Living Cash Back — 100% of premiums returned if no CI claim is made by maturity.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','1 Year'],['Max. Entry Age','60 Years (Nearest Birthday)'],['Policy Maturity','Age 75 or Age 100 (chosen at inception)'],['Min. Sum Assured','PHP 500,000'],['Max. Sum Assured','PHP 10,000,000 (subject to medical underwriting)']],
+    benefits:[{c:true,t:'Major CI Benefit: 100% of Face Amount lump sum on diagnosis of any of the major 100 critical illnesses (90-day wait)'},{c:true,t:'Minor CI Benefit: 25% of Face Amount for early-stage/minor CI; max 2 claims, aggregate cap PHP 1,000,000'},{c:true,t:'Compassionate Death Benefit: 100% of Face Amount if death occurs without prior CI claim'},{c:true,t:'Healthy Living Cash Back: 100% of total premiums paid returned if no CI claim made by maturity (Age 75 or 100)'},{c:false,t:'Policy lapses immediately if premium not paid within 31-day grace period; reinstatement within 2 years'}],
+    premium:[['Payment Options','Annual Pay, 10-Year Limited, 20-Year Limited'],['Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','GCash, Maya, Bank OTC, Credit Cards'],['Grace Period','31 days; lapse if unpaid; reinstatement within 2 years with evidence of insurability']],
+    fees:[['Pure Term','No cash surrender value'],['Endowment Variant','Cash surrender value builds after 3 complete policy years'],['Document Reference','AZ-CI-PH-2026-V1']],
+    kpis:[{l:'Conditions Covered',v:'100 CI Conditions'},{l:'Max. Sum Assured',v:'PHP 10,000,000'},{l:'Premiums',v:'Level – never increase'},{l:'Cash Back',v:'100% on no-claim maturity'}]
+  },
+  'scholars': {
+    icon:'🎓', title:'AZ Future Scholars Builder', type:'Education Unit-Linked Variable Life Insurance',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP','Education Plan'],
+    overview:'A structured VUL savings plan funding a child\'s college education through investment-linked premium payments. If the paying parent dies or suffers TPD before the child reaches 17, AZ Insurance waives all future premiums and continues paying them into the fund — ensuring the education goal is met regardless. Fund payouts are timed to university enrollment years.',
+    eligibility:[['Parent/Policy Owner Min. Age','18 Years'],['Child Insured Min. Age','30 Days'],['Child Max. Age at Entry','12 Years'],['Policy Maturity','Child\'s 21st Birthday'],['Basic Sum Assured','500% of annualized regular premium']],
+    benefits:[{c:true,t:'Education Payout at Age 17: 20% of accumulated fund value'},{c:true,t:'Education Payout at Age 18: 25% of remaining fund value'},{c:true,t:'Education Payout at Age 19: 30% of remaining fund value'},{c:true,t:'Education Payout at Age 20: 35% of remaining fund value'},{c:true,t:'Graduation Payout at Age 21: 100% of remaining fund balance'},{c:true,t:'Payor Death/TPD: All future premiums waived; AZ continues funding until child reaches college age'},{c:true,t:'Milestone Bonus: 2% extra fund allocation on 5th, 10th, and 15th anniversaries (if premiums current)'}],
+    premium:[['Min. Monthly Premium','PHP 3,500'],['Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','Auto-Debit, GCash, Maya, Credit Cards'],['Grace Period','31 days'],['Policy Maintenance Charge','PHP 120/month via unit cancellation']],
+    fees:[['Policy Maintenance','PHP 120/month'],['Fund Mgmt Fee','1.25% p.a. (in fund NAV)'],['Document Reference','AZ-EDUC-PH-2026-V1']],
+    kpis:[{l:'Min. Monthly Premium',v:'PHP 3,500'},{l:'Policy Maturity',v:'Child Age 21'},{l:'Child Entry Max.',v:'12 Years'},{l:'Milestone Bonus',v:'2% at Yr 5/10/15'}]
+  },
+  'global-travel': {
+    icon:'✈️', title:'AZ Global Assure Travel', type:'International Travel Insurance – General Insurance',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP','Schengen Approved'],
+    overview:'Comprehensive travel insurance for Filipino travelers worldwide. Meets Schengen Visa mandatory EUR 30,000 medical requirement. Covers emergency medical up to PHP 2.5M, evacuation, trip cancellation up to PHP 150K, baggage loss, and flight delay cash. Single-trip (up to 180 days) and annual multi-trip options.',
+    eligibility:[['Min. Age','1 Year Old'],['Max. Age','75 Years (Nearest Birthday)'],['Trip Origin','Must depart from a Philippines airport'],['Single Trip Max.','180 Consecutive Days'],['Annual Multi-Trip','Unlimited trips; max 90 days each'],['Zone A','ASEAN Countries'],['Zone B','Worldwide excl. USA/Canada'],['Zone C','Worldwide incl. USA/Canada/Schengen']],
+    benefits:[{c:true,t:'Emergency Medical & Evacuation: Up to PHP 2,500,000 including professional medical escort back to Philippines'},{c:true,t:'Trip Cancellation/Interruption: Up to PHP 150,000 for non-refundable bookings (death, severe illness, injury of insured or immediate family)'},{c:true,t:'Baggage & Personal Effects Loss: Up to PHP 50,000 total; PHP 10,000 per item sub-limit'},{c:true,t:'Flight Delay Cash: PHP 2,500 per 6-hour delay block; max PHP 15,000 aggregate'},{c:false,t:'Exclusions: Pre-existing conditions, extreme sports, alcohol/narcotics, travel against physician advice'}],
+    premium:[['Premium Basis','One-time fixed charge before departure by zone and duration'],['Channels','GCash, Maya, Debit/Credit Cards'],['Medical Deductible','Zero PHP for emergency medical/evacuation'],['Baggage Deductible','PHP 500 for baggage damage claims']],
+    fees:[['Medical Deductible','Zero PHP'],['Baggage Deductible','PHP 500'],['Document Reference','AZ-TRV-PH-2026-V1']],
+    kpis:[{l:'Emergency Medical',v:'PHP 2,500,000'},{l:'Trip Cancellation',v:'PHP 150,000'},{l:'Baggage Cover',v:'PHP 50,000'},{l:'Flight Delay',v:'PHP 2,500/6hrs'}]
+  },
+  'home-fortress': {
+    icon:'🏠', title:'AZ Home Fortress Secure', type:'Residential Property Insurance – General Insurance',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP'],
+    overview:'Comprehensive annual property insurance protecting concrete residential homes, townhouses, and condominiums in the Philippines. Covers structural damage from fire, lightning, typhoons, earthquakes, volcanic eruptions, and floods. Personal contents up to PHP 500K and third-party liability up to PHP 100K included.',
+    eligibility:[['Policyholder Min. Age','18 Years'],['Property Types','Concrete houses, townhouses, condominiums in Philippines'],['Excluded Properties','Wood/light-material structures; commercial/warehouse buildings'],['Policy Duration','12 Months – Annual Renewal']],
+    benefits:[{c:true,t:'Fire & Lightning: Repair or rebuild costs up to declared sum insured'},{c:true,t:'Natural Disaster Extension: Typhoon, earthquake, volcanic eruption, flood – up to full policy face amount'},{c:true,t:'Personal Contents Protection: Furniture, appliances, electronics destroyed or stolen; up to PHP 500,000'},{c:true,t:'Household Liability: Up to PHP 100,000 for third-party injury within insured property'},{c:false,t:'Exclusions: Wear and tear, war risk, nuclear contamination, theft without forced entry evidence'}],
+    premium:[['Rating Factors','Property value, flood zone, earthquake fault proximity, claims history'],['Payment','One-time annual or semi-annual installment'],['Channels','GCash, Maya, Bank OTC, Credit Cards'],['Catastrophe Deductible','2.0% of item sum insured for earthquake/typhoon claims (statutory)']],
+    fees:[['Catastrophe Excess','2.0% of sum insured (earthquake & typhoon – regulatory)'],['Document Reference','AZ-HOM-PH-2026-V1']],
+    kpis:[{l:'Contents Cover',v:'Up to PHP 500,000'},{l:'Liability Cover',v:'PHP 100,000'},{l:'Perils Covered',v:'Fire, Typhoon, Quake'},{l:'Catastrophe Excess',v:'2% of sum insured'}]
+  },
+  'peso-harvest': {
+    icon:'🌾', title:'AZ Peso Harvest 10-5', type:'Guaranteed Savings Endowment – Traditional Non-Participating',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP','Guaranteed Returns'],
+    overview:'Short-term guaranteed savings plan: pay for 5 years, receive cash payouts over 10 years. All benefits are contractually locked at inception — zero market risk. Receive 8% of sum assured annually from Year 5 to Year 9, then 100% of sum assured as lump sum at Year 10. Death benefit provides 200% of total premiums paid.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','1 Year'],['Max. Entry Age','60 Years (Nearest Birthday)'],['Policy Lifespan','10 Years from Inception'],['Premium Paying Term','5 Years Fixed'],['Min. Annual Premium','PHP 25,000']],
+    benefits:[{c:true,t:'Annual Survival Payouts (Years 5–9): 8% of Basic Sum Assured each year – guaranteed'},{c:true,t:'Maturity Benefit (Year 10): 100% of Basic Sum Assured as lump sum – guaranteed'},{c:true,t:'Life Insurance Protection: Death benefit = 200% of total premiums paid to date (less prior survival payouts)'},{c:true,t:'APL Feature: Automatic Premium Loan from Year 3 using guaranteed cash values'},{c:false,t:'Early surrender before Year 5 results in loss of principal; surrender values available from Year 2'}],
+    premium:[['Payment Modes','Semi-Annual or Annual'],['Channels','GCash, Maya, Bank OTC, Credit Cards'],['Grace Period','31 days'],['APL','Available from Year 3 using guaranteed cash values']],
+    fees:[['All Returns','100% guaranteed; zero market risk'],['Surrender Values','Available from Year 2; surrender before Year 5 = principal loss'],['Document Reference','AZ-END-PH-2026-V1']],
+    kpis:[{l:'Annual Payout',v:'8% of Sum Assured'},{l:'Maturity Benefit',v:'100% Sum Assured'},{l:'Death Benefit',v:'200% of premiums paid'},{l:'Min. Annual Premium',v:'PHP 25,000'}]
+  },
+  'metrobank-saver': {
+    icon:'🏦', title:'AZ Metrobank Legacy Saver 15-7', type:'Limited Pay Life & Endowment Bancassurance',
+    badges:['🇵🇭 Philippines','BSP / IC Compliant','PHP','Metrobank Exclusive'],
+    overview:'Bancassurance endowment distributed exclusively through Metrobank branches. Pay for 7 years, enjoy rewards over 15 years. Biennial cash payouts of 10% of sum assured from Year 8 (Years 8, 10, 12, 14), guaranteed lump sum maturity at Year 15, and 200% death benefit throughout the policy term.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','2 Years'],['Max. Entry Age','55 Years (Nearest Birthday)'],['Policy Lifespan','15 Years from Inception'],['Premium Paying Term','7 Years'],['Min. Annual Premium','PHP 40,000'],['Distribution','Exclusively via Metrobank Branches']],
+    benefits:[{c:true,t:'Biennial Cash Payouts: 10% of Basic Sum Assured at end of Years 8, 10, 12, and 14 – guaranteed'},{c:true,t:'Maturity Benefit (Year 15): 100% of Basic Sum Assured + non-guaranteed accumulated dividends'},{c:true,t:'Life Insurance: 200% of Basic Sum Assured death benefit throughout the 15-year term'},{c:true,t:'Guaranteed Cash Surrender Values from Policy Year 4 onwards'}],
+    premium:[['Payment Modes','Quarterly, Semi-Annual, Annual'],['Channels','Auto-Debit from Metrobank accounts or Credit Cards'],['Grace Period','31 days'],['Surrender Values','Build from Policy Year 4 per attached ledger']],
+    fees:[['Admin / Commission','Factored into premium pricing'],['Surrender Values','From Year 4 per policy schedule ledger'],['Document Reference','AZ-BANC2-PH-2026-V1']],
+    kpis:[{l:'Death Benefit',v:'200% Sum Assured'},{l:'Biennial Payout',v:'10% Sum Assured × 4'},{l:'Min. Premium',v:'PHP 40,000/year'},{l:'Policy Term',v:'15 Years / 7yr Pay'}]
+  },
+  'bpi-banc': {
+    icon:'🏛️', title:'AZ BPI Bancassurance Secure Wealth', type:'Single Premium Endowment Bancassurance',
+    badges:['🇵🇭 Philippines','BSP / IC Compliant','PHP','BPI Exclusive'],
+    overview:'Conservative single-premium bancassurance for BPI retail banking clients. One lump-sum investment earns 4% guaranteed annual cash payout for 4 years, then 100% of capital is returned at Year 5 maturity. Life coverage during the term pays 125% (natural death) or 200% (accidental death) of the principal to beneficiaries.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','5 Years'],['Max. Entry Age','75 Years (Nearest Birthday)'],['Policy Maturity','Exactly 5 Years'],['Min. Single Premium','PHP 100,000'],['Max. Single Premium','PHP 20,000,000'],['Distribution','Exclusively via BPI Partner Bank Network']],
+    benefits:[{c:true,t:'Guaranteed Annual Cash Payout: 4.0% of initial single premium at end of Years 1, 2, 3, and 4'},{c:true,t:'Maturity Benefit (Year 5): 100% of initial single premium returned – fully guaranteed'},{c:true,t:'Natural Cause Death Benefit: 125% of initial single premium to designated beneficiaries'},{c:true,t:'Accidental Death Benefit: 200% of initial single premium to designated beneficiaries'},{c:false,t:'Early Withdrawal Penalty: 5% Year 1 → 4% Year 2 → 3% Year 3 → 2% Year 4 → 1% Year 5 of initial principal'}],
+    premium:[['Payment Mode','Single Premium – Lump Sum only'],['Channels','Bank account debit or Manager\'s Check via BPI'],['Grace Period','Not applicable – fully funded at inception'],['Admin Fee','Zero PHP deducted from client capital']],
+    fees:[['Admin Fee','Zero PHP (cost covered by asset yield spread)'],['Early Surrender Penalty','5% → 4% → 3% → 2% → 1% by year'],['Document Reference','AZ-BANC-PH-2026-V1']],
+    kpis:[{l:'Annual Yield',v:'4.0% Guaranteed'},{l:'Capital Return',v:'100% at Year 5'},{l:'Min. Investment',v:'PHP 100,000'},{l:'Death Benefit',v:'125% / 200%'}]
+  },
+  'maxilink': {
+    icon:'📈', title:'AZ Maxilink Prime', type:'Variable Universal Life Insurance (VUL) – Regular Premium',
+    badges:['🇵🇭 Philippines','IC Compliant','PHP'],
+    overview:'Regular-premium VUL combining lifetime life protection with active investment growth. Premiums (after 2% loading) are fully allocated into three fund choices: Equity Growth (aggressive), Prosperity Balanced (moderate), or Fixed Income Bond (conservative). Loyalty bonuses kick in from Year 10. Premium holiday allowed after 3 full years.',
+    eligibility:[['Policy Owner Min. Age','18 Years'],['Life Assured Min. Age','30 Days'],['Max. Entry Age','70 Years (Nearest Birthday)'],['Policy Maturity','Age 88 of Life Assured or Full Surrender'],['Min. Sum Assured','PHP 200,000'],['Min. Annual Premium','PHP 30,000']],
+    benefits:[{c:true,t:'Death Benefit: Higher of Basic Sum Assured (less partial surrenders) or total Account Value at claim date'},{c:true,t:'Living Benefit: Full or partial fund surrenders available any time to fund goals'},{c:true,t:'Start-Up Bonus: 5% of 1st-year premium credited to Account Value on 13th month (no outstanding premiums)'},{c:true,t:'Loyalty Bonus: 0.5% of average monthly account value credited annually from Year 10 onward'},{c:true,t:'Premium Holiday: Allowed after 3 consecutive policy years; max 24 months; costs deducted from fund units'}],
+    premium:[['Min. Annual Regular Premium','PHP 30,000'],['Modes','Monthly, Quarterly, Semi-Annual, Annual'],['Channels','GCash, Maya, BDO/BPI Online, Credit Cards'],['Ad-Hoc Top-Up','Min. PHP 5,000'],['Premium Loading','2.0% deducted before fund allocation']],
+    fees:[['Policy Maintenance','PHP 150/month via unit cancellation'],['Fund Mgmt Fee','1.50% p.a. (in daily NAV)'],['Premium Loading','2.0% per regular premium'],['Surrender Charge','Yr1: 5% / Yr2: 4% / Yr3: 3% / Yr4: 2% / Yr5: 1% / Yr6+: 0%'],['Fund Switching','Free – up to 10 times/year'],['Document Reference','AZ-VUL-PH-2026-V1']],
+    kpis:[{l:'Min. Annual Premium',v:'PHP 30,000'},{l:'Fund Choices',v:'3 Options'},{l:'Loyalty Bonus',v:'From Year 10'},{l:'Surrender-Free From',v:'Year 6'}]
+  },
+  'prosperity': {
+    icon:'💰', title:'AZ Prosperity Fund Accumulator', type:'Standalone Mutual Fund – No Insurance (SLAMCI Model)',
+    badges:['🇵🇭 Philippines','SEC Compliant','PHP','Pure Investment'],
+    overview:'A pure retail mutual fund with no insurance component. 100% of net capital (less sales loads) is pooled into institutional instruments across three fund options: Philippine Equity (aggressive), Balanced Growth (moderate), or Peso Money Market (conservative). Ideal for retirement preparation, capital growth, or savings alternatives. Auto investment plan available.',
+    eligibility:[['Min. Age','18 Years (Individual)'],['Corporate Accounts','Permitted under separate bylaws'],['Min. Initial Investment','PHP 5,000'],['Min. Additional Investment','PHP 1,000 per transaction'],['Redemption Settlement','T+3 Business Days']],
+    benefits:[{c:true,t:'Philippine Equity Fund: PSE-listed high-cap stocks; aggressive growth over 5–10 year horizon'},{c:true,t:'Balanced Growth Fund: 50% equities + 50% treasury bonds; moderate growth with downside mitigation'},{c:true,t:'Peso Money Market Fund: Short-term government securities; high liquidity, capital preservation'},{c:true,t:'Auto Investment Plan: Monthly or quarterly automated debits from linked bank account (peso cost averaging)'},{c:true,t:'Redeem any business day before 12:00 PM cut-off; payout within 3 business days'}],
+    premium:[['Front-End Sales Load','1.5% for Equity & Balanced; not specified for Money Market'],['Redemption Fee','1.0% if redeemed within 180 days; 0% after 180 days'],['Management Fee','1.75% Equity / 1.50% Balanced / 0.50% Money Market (in daily NAVPU)'],['Channels','GCash, Maya, BDO/BPI/UnionBank transfer, OTC payments']],
+    fees:[['Sales Load','1.5% front-end (Equity & Balanced)'],['Redemption Fee','1.0% (< 180 days); Free after 180 days'],['Mgmt Fee','0.50%–1.75% p.a.'],['Document Reference','AZ-MF-PH-2026-V1']],
+    kpis:[{l:'Min. Investment',v:'PHP 5,000'},{l:'Fund Options',v:'3 Choices'},{l:'Redemption',v:'T+3 Business Days'},{l:'Auto Plan',v:'Monthly / Quarterly'}]
+  }
+};
+
+// ──── STATE ──────────────────────────────────────────────────────
+let curCat = 'all', curJur = 'all', curSearch = '';
+
+function setCat(cat) {
+  curCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  applyFilters();
+}
+function setJur(jur) {
+  curJur = jur;
+  document.querySelectorAll('.jur-btn').forEach(b => b.classList.toggle('active', b.dataset.jur === jur));
+  applyFilters();
+}
+function applyFilters() {
+  curSearch = document.getElementById('searchInput').value.toLowerCase();
+  const tiles = document.querySelectorAll('.product-tile');
+  let visible = 0;
+  tiles.forEach(tile => {
+    const matchCat = curCat === 'all' || tile.dataset.cat === curCat;
+    const matchJur = curJur === 'all' || tile.dataset.jur === curJur;
+    const text = tile.innerText.toLowerCase();
+    const matchSearch = !curSearch || text.includes(curSearch);
+    const show = matchCat && matchJur && matchSearch;
+    tile.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('resultsCount').textContent = `Showing ${visible} product${visible !== 1 ? 's' : ''}`;
+  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+}
+
+// ──── MODAL ──────────────────────────────────────────────────────
+function openModal(id) {
+  const p = products[id];
+  if (!p) return;
+  document.getElementById('modalIcon').textContent = p.icon;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalType').textContent = p.type;
+  document.getElementById('modalBadges').innerHTML = p.badges.map(b => `<span class="modal-hero-badge">${b}</span>`).join('');
+
+  // Build main content
+  let main = `
+    <div class="modal-section">
+      <h3>📋 Overview</h3>
+      <p>${p.overview}</p>
+    </div>
+    <div class="modal-section">
+      <h3>✅ Key Benefits</h3>
+      <ul class="benefit-list">
+        ${p.benefits.map(b => `<li><span class="bcheck${b.c ? '' : ' red'}">${b.c ? '✓' : '✗'}</span><span>${b.t}</span></li>`).join('')}
+      </ul>
+    </div>
+    <div class="modal-section">
+      <h3>👤 Eligibility</h3>
+      <table class="data-table">
+        <tr><th>Parameter</th><th>Value</th></tr>
+        ${p.eligibility.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="modal-section">
+      <h3>💳 Premium & Payment</h3>
+      <table class="data-table">
+        <tr><th>Parameter</th><th>Detail</th></tr>
+        ${p.premium.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="modal-section">
+      <h3>💼 Fees & Charges</h3>
+      <table class="data-table">
+        <tr><th>Fee</th><th>Amount</th></tr>
+        ${p.fees.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}
+      </table>
+    </div>`;
+  document.getElementById('modalMain').innerHTML = main;
+
+  // Build sidebar
+  let sidebar = `
+    <div class="sidebar-kpi">
+      <h4>At a Glance</h4>
+      ${p.kpis.map(k => `<div class="kpi-item"><div class="kpi-label">${k.l}</div><div class="kpi-value">${k.v}</div></div>`).join('')}
+    </div>
+    <button class="btn-modal-primary" onclick="closeModal()">Get a Free Quote</button>
+    <button class="btn-modal-ghost" onclick="closeModal()">Speak to an Advisor</button>
+    <p class="disclaimer">This product summary is for informational purposes only and does not constitute financial advice. Please refer to the official Product Disclosure Sheet and Policy Contract for complete terms and conditions.</p>`;
+  document.getElementById('modalSidebar').innerHTML = sidebar;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00DHn000008KeZx',
+				'Az_Insurance',
+				'https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326',
+				{
+					scrt2URL: 'https://ap1781425693806.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+</body>
+</html>

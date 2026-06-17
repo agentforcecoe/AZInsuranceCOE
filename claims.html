@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claims Centre – AZ Insurance</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-dark: #1B5E20;
+    --green-mid: #2E7D32;
+    --green-main: #388E3C;
+    --green-soft: #4CAF50;
+    --green-pale: #E8F5E9;
+    --green-accent: #00C853;
+    --text-dark: #1A1A2E;
+    --text-mid: #4A4A6A;
+    --text-light: #8A8AAA;
+    --white: #FFFFFF;
+    --bg-light: #F7F9F7;
+    --border: #D8E8D8;
+    --shadow: 0 2px 20px rgba(27,94,32,0.08);
+    --shadow-hover: 0 8px 32px rgba(27,94,32,0.14);
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text-dark); background: var(--white); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; height: 72px; gap: 2rem; }
+  .nav-links { display: flex; gap: 0.25rem; margin-left: 2rem; flex: 1; }
+  .nav-link { padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 500; color: var(--text-mid); border-radius: 8px; transition: all 0.2s; }
+  .nav-link:hover { background: var(--green-pale); color: var(--green-dark); }
+  .nav-link.active { background: var(--green-pale); color: var(--green-dark); }
+  .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+  .btn-ghost { padding: 0.5rem 1.25rem; border: 1.5px solid var(--green-main); color: var(--green-main); background: transparent; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-ghost:hover { background: var(--green-pale); }
+  .btn-primary { padding: 0.5rem 1.25rem; background: var(--green-main); color: white; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-primary:hover { background: var(--green-dark); }
+
+  /* PAGE WRAPPER */
+  .page-wrapper { padding-top: 72px; min-height: 100vh; }
+
+  /* SECTION STRUCTURE */
+  .section { padding: 5rem 2rem; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green-main); margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; }
+  .section-subtitle { font-size: 1rem; color: var(--text-mid); line-height: 1.7; max-width: 600px; }
+  .section-header { margin-bottom: 3rem; }
+  .section-header.center { text-align: center; }
+  .section-header.center .section-subtitle { margin: 0 auto; }
+  .bg-light { background: var(--bg-light); }
+
+  /* CLAIMS STEPS */
+  .claims-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; position: relative; }
+  .step-card { padding: 1.75rem; background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); text-align: center; transition: box-shadow 0.3s; }
+  .step-card:hover { box-shadow: var(--shadow-hover); }
+  .step-num { width: 44px; height: 44px; background: var(--green-main); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin: 0 auto 1rem; }
+  .step-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+  .step-card p { font-size: 0.825rem; color: var(--text-mid); line-height: 1.6; }
+
+  /* DOC CARDS */
+  .sidebar-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow); }
+  .sidebar-card h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; }
+  .benefit-list { list-style: none; }
+  .benefit-list li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; font-size: 0.875rem; color: var(--text-mid); border-bottom: 1px solid var(--bg-light); line-height: 1.5; }
+  .benefit-list li:last-child { border-bottom: none; }
+  .benefit-check { color: var(--green-main); font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+  /* CLAIM TRACKER */
+  .calc-wrapper { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow); max-width: 720px; margin: 0 auto; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group label { font-size: 0.825rem; font-weight: 600; color: var(--text-mid); }
+  .form-control { padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; color: var(--text-dark); background: var(--bg-light); outline: none; transition: border-color 0.2s; width: 100%; }
+  .form-control:focus { border-color: var(--green-main); background: white; }
+  .btn-full { width: 100%; padding: 0.875rem; background: var(--green-main); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 0.75rem; transition: background 0.2s; }
+  .btn-full:hover { background: var(--green-dark); }
+  .calc-result { background: var(--green-pale); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; text-align: center; margin-top: 1rem; display: none; }
+  .result-label { font-size: 0.8rem; font-weight: 600; color: var(--green-main); text-transform: uppercase; letter-spacing: 0.05em; }
+  .result-value { font-size: 1.4rem; font-weight: 700; color: var(--green-dark); margin: 0.25rem 0; }
+  .result-note { font-size: 0.78rem; color: var(--text-light); }
+
+  /* CTA BAND */
+  .cta-band { background: linear-gradient(135deg, #1B5E20, #388E3C); color: white; padding: 4rem 2rem; text-align: center; }
+  .cta-band h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .cta-band p { font-size: 1rem; opacity: 0.85; margin-bottom: 2rem; }
+  .cta-band-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .btn-hero { padding: 0.875rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-hero-white { background: white; color: var(--green-dark); }
+  .btn-hero-white:hover { background: #E8F5E9; transform: translateY(-1px); }
+  .btn-hero-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+  .btn-hero-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+  /* FOOTER */
+  .footer { background: #0D3B14; color: rgba(255,255,255,0.85); padding: 4rem 2rem 2rem; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.85rem; opacity: 0.7; line-height: 1.7; max-width: 260px; margin-top: 1rem; }
+  .footer-col h4 { font-size: 0.825rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #69F0AE; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.6rem; }
+  .footer-col ul li a { font-size: 0.85rem; opacity: 0.75; transition: opacity 0.2s; }
+  .footer-col ul li a:hover { opacity: 1; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-bottom p { font-size: 0.8rem; opacity: 0.5; }
+  .footer-bottom-links { display: flex; gap: 1.5rem; }
+  .footer-bottom-links a { font-size: 0.8rem; opacity: 0.5; }
+  .footer-bottom-links a:hover { opacity: 0.8; }
+  .reg-badges { display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .reg-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; opacity: 0.8; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <!-- LOGO -->
+    <a href="index.html">
+      <svg width="160" height="44" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#4CAF50"/>
+        <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#1B5E20"/>
+        <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="white"/>
+        <text x="44" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" font-weight="800" fill="#1B5E20">AZ</text>
+        <text x="72" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" font-weight="400" fill="#2E7D32"> Insurance</text>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="products.html">Products</a>
+      <a class="nav-link active" href="claims.html">Claims</a>
+      <a class="nav-link" href="about.html">About Us</a>
+      <a class="nav-link" href="faq.html">FAQs</a>
+      <a class="nav-link" href="contact.html">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost">Log In</button>
+      <a href="contact.html"><button class="btn-primary">Get a Quote</button></a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <section style="background: linear-gradient(135deg, #0D3B14, #2E7D32); color:white; padding: 5rem 2rem 4rem; text-align:center;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); padding:0.4rem 1rem; border-radius:50px; font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:1.25rem;">⚡ Claims Centre</div>
+      <h1 style="font-size:clamp(2rem,4vw,3rem); font-weight:700; margin-bottom:1rem; line-height:1.15;">Claims Centre</h1>
+      <p style="font-size:1.05rem; opacity:0.85; max-width:600px; margin:0 auto 2.5rem;">We process 98% of claims within 5 business days. Your dedicated claims manager will guide you every step of the way.</p>
+      <!-- quick stat bar -->
+      <div style="display:flex; justify-content:center; gap:3rem; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:#69F0AE;">98%</div>
+          <div style="font-size:0.78rem; opacity:0.72; margin-top:0.15rem;">Claims Settled</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:#69F0AE;">5</div>
+          <div style="font-size:0.78rem; opacity:0.72; margin-top:0.15rem;">Business Days</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:#69F0AE;">24/7</div>
+          <div style="font-size:0.78rem; opacity:0.72; margin-top:0.15rem;">Hotline Support</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:1.8rem; font-weight:800; color:#69F0AE;">1:1</div>
+          <div style="font-size:0.78rem; opacity:0.72; margin-top:0.15rem;">Dedicated Manager</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-STEP PROCESS -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">How to File</div>
+        <h2 class="section-title">Simple 4-Step Claims Process</h2>
+        <p class="section-subtitle">From notification to disbursement, we keep you informed at every stage.</p>
+      </div>
+      <div class="claims-steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Notify AZ Insurance</h3>
+          <p>Call our 24/7 claims hotline (+65 6222 0000 / +63 2 8888 0000) or submit online via MyAZ portal within 30 days of the event.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Submit Documents</h3>
+          <p>Upload or courier required documents. Your claims manager will send a personalised checklist within 1 business day of notification.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Assessment</h3>
+          <p>Our experienced claims assessors review your submission. We may request a medical examination or specialist report for certain claims.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Disbursement</h3>
+          <p>Approved claim amounts are disbursed via bank transfer within 5 business days. Death claims include a bereavement support call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCUMENTATION GUIDE -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Documentation Guide</div>
+        <h2 class="section-title">What You'll Need</h2>
+        <p class="section-subtitle">Prepare the right documents to ensure your claim is processed without delay.</p>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem;">
+
+        <div class="sidebar-card">
+          <h3>🛡️ Life &amp; TPD Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Completed AZ Claim Form (Form LC-01)</li>
+            <li><span class="benefit-check">✓</span> Original Policy Document or Policy Number</li>
+            <li><span class="benefit-check">✓</span> Certified Death Certificate (for death claims)</li>
+            <li><span class="benefit-check">✓</span> Medical Reports &amp; Specialist Certification (for TPD)</li>
+            <li><span class="benefit-check">✓</span> NRIC / Passport of Claimant &amp; Beneficiary</li>
+            <li><span class="benefit-check">✓</span> Bank Account Details for Disbursement</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>❤️ Health &amp; Medical Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Hospital Discharge Summary</li>
+            <li><span class="benefit-check">✓</span> Itemised Medical Bills &amp; Receipts</li>
+            <li><span class="benefit-check">✓</span> Doctor's Referral Letters &amp; Lab Reports</li>
+            <li><span class="benefit-check">✓</span> Completed AZ Claim Form (Form HC-02)</li>
+            <li><span class="benefit-check">✓</span> Insurance Guarantee Letter (if used)</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>🚗 Motor &amp; General Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Police Report (if accident or theft)</li>
+            <li><span class="benefit-check">✓</span> Completed Vehicle Accident Form</li>
+            <li><span class="benefit-check">✓</span> Photos of Damage</li>
+            <li><span class="benefit-check">✓</span> Driver's Licence &amp; Vehicle Registration</li>
+            <li><span class="benefit-check">✓</span> Repair Estimates from Authorised Workshop</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>✈️ Travel Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Airline Boarding Passes (proof of travel)</li>
+            <li><span class="benefit-check">✓</span> Official Medical Receipts (overseas treatment)</li>
+            <li><span class="benefit-check">✓</span> Airline Baggage Irregularity Report</li>
+            <li><span class="benefit-check">✓</span> Trip Cancellation Evidence (e.g. death cert, hospital admission)</li>
+            <li><span class="benefit-check">✓</span> Completed AZ Travel Claim Form (Form TC-04)</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>🏠 Home &amp; Property Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Fire Marshal or Police Report</li>
+            <li><span class="benefit-check">✓</span> Photographs of Structural &amp; Contents Damage</li>
+            <li><span class="benefit-check">✓</span> Repair / Replacement Quotations</li>
+            <li><span class="benefit-check">✓</span> Proof of Ownership (title deed or tenancy agreement)</li>
+            <li><span class="benefit-check">✓</span> Completed AZ Property Claim Form (Form PC-05)</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>🩺 Critical Illness &amp; Cancer Claims</h3>
+          <ul class="benefit-list">
+            <li><span class="benefit-check">✓</span> Histopathology / Biopsy Report</li>
+            <li><span class="benefit-check">✓</span> Oncologist / Specialist Diagnosis Letter</li>
+            <li><span class="benefit-check">✓</span> Hospital Admission &amp; Discharge Records</li>
+            <li><span class="benefit-check">✓</span> Completed AZ CI Claim Form (Form CI-06)</li>
+            <li><span class="benefit-check">✓</span> NRIC / Passport of Claimant</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CLAIM TRACKER -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Track Your Claim</div>
+        <h2 class="section-title">Check Claim Status</h2>
+        <p class="section-subtitle">Enter your policy and claim details below to get an instant status update.</p>
+      </div>
+      <div class="calc-wrapper">
+        <div class="form-group" style="margin-bottom:1.25rem;">
+          <label>Policy Number</label>
+          <input type="text" class="form-control" placeholder="e.g. AZ-SG-WL-2024-0098721" id="claim-policy">
+        </div>
+        <div class="form-group" style="margin-bottom:1.25rem;">
+          <label>Claim Reference Number</label>
+          <input type="text" class="form-control" placeholder="e.g. CLM-2025-0048392" id="claim-ref">
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label>NRIC / Passport Number (last 4 characters)</label>
+          <input type="text" class="form-control" placeholder="e.g. 678A" maxlength="4" id="claim-nric">
+        </div>
+        <button class="btn-full" onclick="trackClaim()">Track Claim Status</button>
+        <div id="claim-result" class="calc-result">
+          <div class="result-label">Claim Status</div>
+          <div class="result-value">Under Assessment</div>
+          <div class="result-note">CLM-2025-0048392 · Received 14 Jun 2025 · Assessor: Priya Nair</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT HOTLINES -->
+  <section class="section bg-light">
+    <div class="section-inner">
+      <div class="section-header center">
+        <div class="section-tag">Get in Touch</div>
+        <h2 class="section-title">Claims Hotlines</h2>
+        <p class="section-subtitle">Our claims team is available round the clock to assist you.</p>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:1.5rem; max-width:900px; margin:0 auto;">
+        <div class="sidebar-card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:0.75rem;">🇸🇬</div>
+          <h3 style="margin-bottom:0.5rem;">Singapore Hotline</h3>
+          <p style="font-size:1.2rem; font-weight:700; color:var(--green-dark); margin-bottom:0.25rem;">+65 6222 0000</p>
+          <p style="font-size:0.82rem; color:var(--text-light);">Available 24 hours, 7 days a week</p>
+        </div>
+        <div class="sidebar-card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:0.75rem;">🇵🇭</div>
+          <h3 style="margin-bottom:0.5rem;">Philippines Hotline</h3>
+          <p style="font-size:1.2rem; font-weight:700; color:var(--green-dark); margin-bottom:0.25rem;">+63 2 8888 0000</p>
+          <p style="font-size:0.82rem; color:var(--text-light);">Available 24 hours, 7 days a week</p>
+        </div>
+        <div class="sidebar-card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:0.75rem;">📧</div>
+          <h3 style="margin-bottom:0.5rem;">Email Claims</h3>
+          <p style="font-size:0.95rem; font-weight:700; color:var(--green-dark); margin-bottom:0.25rem;">claims@azinsurance.com.sg</p>
+          <p style="font-size:0.82rem; color:var(--text-light);">Response within 1 business day</p>
+        </div>
+        <div class="sidebar-card" style="text-align:center;">
+          <div style="font-size:2rem; margin-bottom:0.75rem;">💬</div>
+          <h3 style="margin-bottom:0.5rem;">MyAZ Portal</h3>
+          <p style="font-size:0.95rem; font-weight:700; color:var(--green-dark); margin-bottom:0.25rem;">my.azinsurance.com</p>
+          <p style="font-size:0.82rem; color:var(--text-light);">Submit & track claims online, 24/7</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <h2>Need Help With Your Claim?</h2>
+    <p>Our dedicated claims managers are just a call away. No queues, no automated menus.</p>
+    <div class="cta-band-btns">
+      <a href="contact.html"><button class="btn-hero btn-hero-white">Contact Us Now</button></a>
+      <a href="products.html"><button class="btn-hero btn-hero-outline">View Our Products</button></a>
+    </div>
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg width="140" height="36" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8,34 C8,20 16,10 28,8 C24,16 22,26 26,34 Z" fill="#69F0AE"/>
+          <path d="M14,34 C14,22 20,14 30,10 C28,18 28,28 32,34 Z" fill="#A5D6A7"/>
+          <path d="M20,34 C20,26 24,18 32,12 C30,20 31,30 34,34 Z" fill="#0D3B14"/>
+          <text x="44" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="800" fill="white">AZ</text>
+          <text x="72" y="29" font-family="'Segoe UI',system-ui,sans-serif" font-size="21" font-weight="400" fill="rgba(255,255,255,0.85)"> Insurance</text>
+        </svg>
+        <p>Protecting families and businesses across Singapore and the Philippines since 1998.</p>
+        <div class="reg-badges">
+          <span class="reg-badge">MAS Licensed</span>
+          <span class="reg-badge">IC Certified</span>
+          <span class="reg-badge">Fitch AA</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="products.html">AZ Legacy Life</a></li>
+          <li><a href="products.html">AZ HealthShield Plus</a></li>
+          <li><a href="products.html">AZ Term Shield</a></li>
+          <li><a href="products.html">AZ Motor Protect</a></li>
+          <li><a href="products.html">AZ TravelSafe</a></li>
+          <li><a href="products.html">AZ HomeGuard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="claims.html">Claims Centre</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">News &amp; Media</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Regulatory Disclosures</a></li>
+          <li><a href="#">Financial Adviser Act</a></li>
+          <li><a href="#">Product Highlights Sheets</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AZ Insurance Ltd. Registered in Singapore (UEN: 199812345A). AZ Insurance Corporation registered in the Philippines (SEC Reg. No. AS094-12345). All rights reserved. This is a fictional entity for demonstration purposes.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function trackClaim() {
+  const policy = document.getElementById('claim-policy').value.trim();
+  const ref    = document.getElementById('claim-ref').value.trim();
+  const nric   = document.getElementById('claim-nric').value.trim();
+  if (policy && ref && nric) {
+    document.getElementById('claim-result').style.display = 'block';
+  } else {
+    alert('Please fill in all fields to track your claim.');
+  }
+}
+</script>
+
+<!-- Salesforce Embedded Messaging -->
+<script type='text/javascript'>
+  function initEmbeddedMessaging() {
+    try {
+      embeddedservice_bootstrap.settings.language = 'en_US';
+      embeddedservice_bootstrap.init(
+        '00DHn000008KeZx',
+        'Az_Insurance',
+        'https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326',
+        { scrt2URL: 'https://ap1781425693806.my.salesforce-scrt.com' }
+      );
+    } catch (err) {
+      console.error('Error loading Embedded Messaging: ', err);
+    }
+  }
+</script>
+<script type='text/javascript' src='https://ap1781425693806.my.site.com/ESWAzInsurance1781605389326/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+</body>
+</html>
